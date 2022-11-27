@@ -1,18 +1,45 @@
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.db import transaction
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+
+from .models import User, Student, Teacher
 
 
-class NewUserForm(UserCreationForm):
-    email = forms.EmailField(required=True)
-
+class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ("username", "email", "password1", "password2")
+        fields = ('email', 'phone_number', 'first_name', 'last_name', 'patronymic')
 
+
+class CustomUserChangeForm(UserChangeForm):
+    class Meta:
+        model = User
+        fields = ('email', 'phone_number', 'first_name', 'last_name', 'patronymic')
+
+
+class StudentSignUpForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ('email', 'phone_number', 'first_name', 'last_name', 'patronymic')
+
+    @transaction.atomic
+    def save(self):
+        user = super().save(commit=False)
+        user.is_student = True
+        user.save()
+        student = Student.objects.create(user=user)
+        return user
+
+
+class TeacherSignUpForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ('email', 'phone_number', 'first_name', 'last_name', 'patronymic')
+
+    @transaction.atomic
     def save(self, commit=True):
-        user = super(NewUserForm, self).save(commit=False)
-        user.email = self.cleaned_data['email']
-        if commit:
-            user.save()
+        user = super().save(commit=False)
+        user.is_teacher = True
+        user.save()
+        teacher = Teacher.objects.create(user=user)
         return user
