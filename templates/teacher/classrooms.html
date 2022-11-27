@@ -1,0 +1,11 @@
+
+<body>
+ {% if not classrooms %}
+    <h4>
+        classrooms doesn't exist
+    </h4>
+    {% endif %}
+    {% for c in classrooms %}
+        <p>{{ c.name }}</p>
+    {% endfor %}
+</body>
