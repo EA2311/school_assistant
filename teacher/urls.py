@@ -2,8 +2,8 @@ from django.urls import path
 
 from teacher.views import ClassroomsView
 
-app_name = 'accounts'
+app_name = 'teacher'
 
 urlpatterns = [
-    path('', ClassroomsView.as_view(), name='home'),
+    path('', ClassroomsView.as_view(), name='classrooms'),
 ]

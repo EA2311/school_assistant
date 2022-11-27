@@ -2,8 +2,8 @@ from django.db import models
 
 
 class Classroom(models.Model):
-    class_name = models.CharField(blank=False)
-    key = models.CharField(blank=False)
+    class_name = models.CharField(blank=False, max_length=20)
+    key = models.CharField(blank=False, max_length=50)
 
 #
 # class Subject(models.Model):
