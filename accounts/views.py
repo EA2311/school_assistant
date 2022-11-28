@@ -27,7 +27,7 @@ def login_request(request):
                 login(request, user)
                 messages.info(request, f"You are now logged in as {email}.")
                 if user.is_teacher:
-                    return redirect("accounts:home")
+                    return redirect("teacher:classrooms")
                 else:
                     return redirect("accounts:home")
             else:

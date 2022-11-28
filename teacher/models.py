@@ -1,15 +1,17 @@
 from django.db import models
 
+from accounts.models import Teacher
+
 
 class Classroom(models.Model):
     class_name = models.CharField(blank=False, max_length=20)
     key = models.CharField(blank=False, max_length=50)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
 
 #
 # class Subject(models.Model):
 #     subject_name = models.CharField()
 #     classroom = models.ForeignKey()
-#     # homeworks = models.ForeignKey()
 #
 #
 # class Homework(models.Model):

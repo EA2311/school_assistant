@@ -27,7 +27,7 @@ class StudentSignUpForm(UserCreationForm):
         user = super().save(commit=False)
         user.is_student = True
         user.save()
-        student = Student.objects.create(user=user)
+        Student.objects.create(user=user)
         return user
 
 
@@ -41,5 +41,5 @@ class TeacherSignUpForm(UserCreationForm):
         user = super().save(commit=False)
         user.is_teacher = True
         user.save()
-        teacher = Teacher.objects.create(user=user)
+        Teacher.objects.create(user=user)
         return user

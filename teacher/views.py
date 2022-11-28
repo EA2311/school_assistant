@@ -1,7 +1,8 @@
-from django.shortcuts import render
-from django.views.generic import ListView
+from django.shortcuts import render, redirect
+from django.views.generic import ListView, CreateView, DetailView
 
 from accounts.models import Teacher
+from teacher.forms import ClassroomCreateForm
 from teacher.models import Classroom
 
 
@@ -19,3 +20,22 @@ class ClassroomsView(ListView):
         teacher = Teacher.objects.get(user=self.request.user)
         classrooms = Classroom.objects.filter(teacher=teacher)
         return classrooms
+
+
+class CreateClassroomsView(CreateView):
+    template_name = 'teacher/create_classroom.html'
+    form_class = ClassroomCreateForm
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        teacher = Teacher.objects.get(user=self.request.user)
+        self.object.key = 122
+        self.object.teacher = teacher
+        self.object.save()
+        return redirect('teacher:classrooms')
+
+
+class DetailClassroomView(DetailView):
+    model = Classroom
+    template_name = 'teacher/classroom_detail.html'
+    context_object_name = 'classroom'

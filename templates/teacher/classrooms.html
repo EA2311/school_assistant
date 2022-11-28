@@ -1,11 +1,19 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
 <body>
  {% if not classrooms %}
     <h4>
-        classrooms doesn't exist
+        Classrooms doesn't exist
     </h4>
-    {% endif %}
-    {% for c in classrooms %}
-        <p>{{ c.name }}</p>
-    {% endfor %}
+ {% endif %}
+
+ {% for c in classrooms %}
+        <p>{{ c.class_name }}</p>
+ {% endfor %}
+ <a href="{% url 'teacher:create_classroom' %}">Add new</a>
 </body>
+</html>
