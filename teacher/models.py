@@ -8,12 +8,12 @@ class Classroom(models.Model):
     key = models.CharField(blank=False, max_length=50)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
 
-#
-# class Subject(models.Model):
-#     subject_name = models.CharField()
-#     classroom = models.ForeignKey()
-#
-#
+
+class Subject(models.Model):
+    subject_name = models.CharField(max_length=50)
+    classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
+
+
 # class Homework(models.Model):
 #     task = models.TextField()
 #     pub_date = models.DateField()
