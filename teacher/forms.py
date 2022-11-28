@@ -1,7 +1,6 @@
 from django import forms
-from django.db import transaction
 
-from teacher.models import Classroom
+from teacher.models import Classroom, Subject
 
 
 class ClassroomCreateForm(forms.ModelForm):
@@ -10,4 +9,8 @@ class ClassroomCreateForm(forms.ModelForm):
         exclude = ('teacher', 'key',)
 
 
+class SubjectCreateForm(forms.ModelForm):
+    class Meta:
+        model = Subject
+        exclude = ('classroom', )
 
