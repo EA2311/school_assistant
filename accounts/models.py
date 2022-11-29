@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils import timezone
 
+from teacher.models import Classroom
 from .managers import CustomUserManager
 
 
@@ -37,7 +38,8 @@ class Teacher(models.Model):
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    teacher = models.CharField(max_length=50, default='Marina')
+
+    classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.user.email

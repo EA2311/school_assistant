@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+ {% if not home_tasks %}
+    <h4>
+        home_tasks doesn't exist
+    </h4>
+ {% endif %}
+
+ {% for h in home_tasks %}
+        <p>{{ h.task }}</p>
+         <p>{{ h.pub_date }}</p>
+<hr>
+ {% endfor %}
+ <a href="{% url 'teacher:create_home_tasks' pk subject.id %}">Add new</a>
+</body>
+</html>

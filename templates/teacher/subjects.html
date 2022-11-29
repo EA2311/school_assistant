@@ -12,7 +12,7 @@
  {% endif %}
 
  {% for s in subjects %}
-        <p>{{ s.subject_name }}</p>
+        <p><a href="{% url 'teacher:home_tasks' pk s.id %}">{{ s.subject_name }}</a></p>
  {% endfor %}
  <a href="{% url 'teacher:create_subjects' pk %}">Add new</a>
 </body>

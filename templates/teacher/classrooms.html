@@ -12,7 +12,8 @@
  {% endif %}
 
  {% for c in classrooms %}
-        <p>{{ c.class_name }}</p>
+         <p><a href="{% url 'teacher:detail_classroom' c.id %}">{{ c.class_name }}</a></p>
+
  {% endfor %}
  <a href="{% url 'teacher:create_classroom' %}">Add new</a>
 </body>
