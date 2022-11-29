@@ -39,6 +39,7 @@ INSTALLED_APPS = [
 
     'accounts',
     'teacher',
+    'student',
     'crispy_forms',
 ]
 
