@@ -69,10 +69,7 @@ class HomeworksView(ListView):
     context_object_name = 'home_tasks'
 
     def get_queryset(self):
-        # classroom = Classroom.objects.get(id=self.kwargs['pk'])
-        # subjects = Subject.objects.filter(classroom=classroom)
         subject = Subject.objects.get(id=self.kwargs['subj'])
-        print(subject.subject_name, '-------------------------------------------')
         home_tasks = Homework.objects.filter(subject=subject)
         return home_tasks
 
@@ -94,4 +91,3 @@ class CreateHomeworkView(CreateView):
         self.object.subject = subject
         self.object.save()
         return redirect('teacher:home_tasks', pk=self.kwargs['pk'], subj=self.kwargs['subj'])
-

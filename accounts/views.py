@@ -29,7 +29,7 @@ def login_request(request):
                 if user.is_teacher:
                     return redirect("teacher:classrooms")
                 else:
-                    return redirect("accounts:home")
+                    return redirect("student:student_classrooms")
             else:
                 messages.error(request, "Invalid username or password.")
         else:

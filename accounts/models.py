@@ -38,7 +38,7 @@ class Teacher(models.Model):
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
 
-    classroom = models.ForeignKey('teacher.Classroom', on_delete=models.CASCADE)
+    classroom = models.ForeignKey('teacher.Classroom', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.user.email
