@@ -29,10 +29,11 @@ class Homework(models.Model):
         return f'{self.subject} - {self.pub_date}'
 
 
+
+
 # class Mark(models.Model):
 #     mark = models.CharField()
 #     comment = models.TextField()
 #     send_date = models.DateField()
 #
-#     student = models.ForeignKey()
 #     homework = models.ForeignKey()

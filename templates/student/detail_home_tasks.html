@@ -11,15 +11,22 @@
 <p>{{ home_task.task }}</p>
 <p>{{ home_task.pub_date }}</p>
 <hr>
-<form action="{% url 'student:send' home_task.subject.id home_task.id%}" method="post">
+{% if not hw %}
+<form method="post" enctype="multipart/form-data">
 {% csrf_token %}
 <fieldset>
     <legend><h1>Моя робота</h1></legend>
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-        <input type="text" name="hw" id="hw">
-        <label for="hw">Введіть текст</label><br>
+        <input type="text" name="hw_text" id="hw_text">
+        <label for="hw_text">Введіть текст</label><br>
+        <input type="file" name="hw_image" id="hw_image" accept="image/*">
 </fieldset>
 		<button class="btn btn-primary" type="submit">Здати</button>
 </form>
+{% endif %}
+<p>{{ hw.text }}</p>
+<p>{{ hw.home_task }}</p>
+<p>{{ hw.send_date }}</p>
+
 </body>
 </html>
