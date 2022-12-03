@@ -7,6 +7,19 @@
 
 </head>
 <body>
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Мої класи</a>
+  <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="navbar-nav">
+    <div class="nav-item text-nowrap">
+      <a class="nav-link px-3" href="{% url 'accounts:logout' %}">Вийти</a>
+    </div>
+  </div>
+</header>
+<div class="px-4 py-5 my-5 text-center">
+     <div class="col-lg-3 mx-auto">
  {% if not classrooms %}
     <h4>
         Classrooms doesn't exist
@@ -15,9 +28,11 @@
 <ul class="list-group">
 {% for c in classrooms %}
     <a href="{% url 'teacher:detail_classroom' c.id %}" class="list-group-item list-group-item-action">{{ c.class_name }}</a>
-
  {% endfor %}
     </ul>
- <a class="btn btn-primary" href="{% url 'teacher:create_classroom' %}">Add new</a>
+         <br>
+ <a class="btn btn-primary" href="{% url 'teacher:create_classroom' %}">Створити новий клас</a>
+</div>
+</div>
 </body>
 </html>

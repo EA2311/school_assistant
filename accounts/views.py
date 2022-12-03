@@ -4,7 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import redirect, render
 from django.views.generic import CreateView, TemplateView
 
-from .forms import StudentSignUpForm, TeacherSignUpForm
+from .forms import StudentSignUpForm, TeacherSignUpForm, UserLoginForm
 from .models import User
 
 
@@ -18,7 +18,7 @@ class SignUpView(TemplateView):
 
 def login_request(request):
     if request.method == "POST":
-        form = AuthenticationForm(request, data=request.POST)
+        form = UserLoginForm(request, data=request.POST)
         if form.is_valid():
             email = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
@@ -34,7 +34,7 @@ def login_request(request):
                 messages.error(request, "Invalid username or password.")
         else:
             messages.error(request, "Invalid username or password.")
-    form = AuthenticationForm()
+    form = UserLoginForm()
     return render(request=request, template_name="accounts/login.html", context={"login_form": form})
 
 
@@ -66,3 +66,7 @@ class TeacherSignUpView(CreateView):
         user = form.save()
         login(self.request, user)
         return redirect('/#')
+
+
+def index(request):
+    return redirect("accounts:home")

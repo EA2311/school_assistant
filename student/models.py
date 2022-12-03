@@ -14,4 +14,4 @@ class StudentWork(models.Model):
     image = models.ImageField(upload_to='homework_images')
 
     def __str__(self):
-        return f'{self.home_task.subject} - {self.send_date}'
+        return f'{self.home_task.subject} - {self.home_task} - {self.student}'

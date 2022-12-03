@@ -34,6 +34,11 @@ class DetailClassroomView(DetailView):
     template_name = 'teacher/classroom_detail.html'
     context_object_name = 'classroom'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['pk'] = self.kwargs['pk']
+        return context
+
 
 class SubjectsView(ListView):
     template_name = 'teacher/subjects.html'
@@ -45,10 +50,10 @@ class SubjectsView(ListView):
         return subjects
 
     def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
-        # Add in a QuerySet of all the books
         context['pk'] = self.kwargs['pk']
+        classroom = Classroom.objects.get(id=self.kwargs['pk'])
+        context['classroom'] = classroom
         return context
 
 
@@ -63,6 +68,11 @@ class CreateSubjectView(CreateView):
         self.object.save()
         return redirect('teacher:subjects', pk=self.kwargs['pk'])
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['pk'] = self.kwargs['pk']
+        return context
+
 
 class HomeworksView(ListView):
     template_name = 'teacher/home_tasks.html'
@@ -70,7 +80,7 @@ class HomeworksView(ListView):
 
     def get_queryset(self):
         subject = Subject.objects.get(id=self.kwargs['subj'])
-        home_tasks = Homework.objects.filter(subject=subject)
+        home_tasks = Homework.objects.filter(subject=subject).order_by('-pub_date')
         return home_tasks
 
     def get_context_data(self, **kwargs):
@@ -91,3 +101,10 @@ class CreateHomeworkView(CreateView):
         self.object.subject = subject
         self.object.save()
         return redirect('teacher:home_tasks', pk=self.kwargs['pk'], subj=self.kwargs['subj'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['pk'] = self.kwargs['pk']
+        subject = Subject.objects.get(id=self.kwargs['subj'])
+        context['subject'] = subject
+        return context

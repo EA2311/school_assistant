@@ -1,8 +1,26 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.db import transaction
-from django import forms
+from django.contrib.auth.forms import AuthenticationForm, UsernameField
 
 from .models import User, Student, Teacher
+
+from django import forms
+
+
+class UserLoginForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super(UserLoginForm, self).__init__(*args, **kwargs)
+
+    username = forms.EmailField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': '', 'id': 'hello'}))
+    password = forms.CharField(widget=forms.PasswordInput(
+        attrs={
+            'class': 'form-control',
+            'placeholder': '',
+            'id': 'hi',
+        }
+))
+
 
 
 class CustomUserCreationForm(UserCreationForm):

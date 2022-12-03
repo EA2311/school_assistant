@@ -6,7 +6,7 @@ from django.views.generic import ListView, DetailView
 from django.core.exceptions import ObjectDoesNotExist
 
 from accounts.models import Student
-from teacher.models import Classroom, Subject, Homework
+from teacher.models import Classroom, Subject, Homework, Mark
 from student.models import StudentWork
 
 
@@ -67,7 +67,9 @@ class StudentDetailHomeworkView(DetailView):
         context = super().get_context_data(**kwargs)
         try:
             hw = StudentWork.objects.get(home_task=self.kwargs['pk'], student__user=self.request.user)
+            mark = Mark.objects.get(homework=hw)
             context['hw'] = hw
+            context['mark'] = mark
         except ObjectDoesNotExist:
             pass
         return context

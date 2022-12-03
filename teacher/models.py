@@ -26,14 +26,16 @@ class Homework(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.subject} - {self.pub_date}'
+        return f'{self.task} - {self.pub_date}'
 
 
+class Mark(models.Model):
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    homework = models.OneToOneField('student.StudentWork', on_delete=models.CASCADE)
 
+    mark = models.CharField(max_length=50)
+    comment = models.TextField()
+    send_date = models.DateTimeField(auto_now_add=True)
 
-# class Mark(models.Model):
-#     mark = models.CharField()
-#     comment = models.TextField()
-#     send_date = models.DateField()
-#
-#     homework = models.ForeignKey()
+    def __str__(self):
+        return f'{self.teacher.user.first_name} - {self.mark}'

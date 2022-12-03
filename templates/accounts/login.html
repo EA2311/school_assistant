@@ -5,19 +5,31 @@
 
 <body>
 {% load crispy_forms_tags %}
+ <form method="POST">
+       {% csrf_token %}
 
-<div class="container py-5">
-  <h1>Login</h1>
-  <form method="POST">
-    {% csrf_token %}
-    {{ login_form|crispy }}
-    <button class="btn btn-primary" type="submit">Login</button>
+<div class="px-4 py-5 my-5 text-center">
+    <img class="d-block mx-auto mb-4" src="/media/Wavy_Edu-05_Single-08.jpg" width="60" height="60">
+    <h1 class="display-5 fw-bold">Вхід у систему</h1>
+
+    <div class="col-lg-3 mx-auto">
+                              <hr>
+
+      {{ login_form|crispy }}
+                      <hr>
+
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        <button class="btn btn-primary btn-lg px-4" type="submit" >Увійти</button>
+        <a type="button" class="btn btn-outline-secondary btn-lg px-4" href="{% url 'accounts:home_signup' %}">Створити акаунт</a>
+      </div>
+              <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                          <p class="text-center">Загубили пароль? <a href="#">Відновити</a></p>
+
+              </div>
+    </div>
+  </div>
+
   </form>
-  {# Assumes you setup the password_reset view in your URLconf #}
-  <p><a href="#">Lost password?</a></p>
-  <p class="text-center">Don't have an account? <a href="{% url 'accounts:home_signup' %}">Create an account</a>.</p>
-</div>
-
 
 </body>
 </html>

@@ -27,6 +27,11 @@
 <p>{{ hw.text }}</p>
 <p>{{ hw.home_task }}</p>
 <p>{{ hw.send_date }}</p>
+{% if mark %}
+<hr>
+<p>{{ mark.mark }}</p>
+<p>{{ mark.comment }}</p>
+{% endif %}
 
 </body>
 </html>
