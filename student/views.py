@@ -35,7 +35,7 @@ class StudentHomeworksView(ListView):
 
     def get_queryset(self):
         subject = Subject.objects.get(id=self.kwargs['subj'])
-        home_tasks = Homework.objects.filter(subject=subject)
+        home_tasks = Homework.objects.filter(subject=subject).order_by('-pub_date')
         return home_tasks
 
     def get_context_data(self, **kwargs):
@@ -65,10 +65,16 @@ class StudentDetailHomeworkView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        student = Student.objects.get(user=self.request.user)
+        context['student'] = student
+        try:
+            hw = StudentWork.objects.get(home_task=self.kwargs['pk'], student__user=self.request.user)
+            context['hw'] = hw
+        except ObjectDoesNotExist:
+            pass
         try:
             hw = StudentWork.objects.get(home_task=self.kwargs['pk'], student__user=self.request.user)
             mark = Mark.objects.get(homework=hw)
-            context['hw'] = hw
             context['mark'] = mark
         except ObjectDoesNotExist:
             pass

@@ -1,6 +1,5 @@
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import redirect, render
 from django.views.generic import CreateView, TemplateView
 
@@ -42,10 +41,6 @@ class StudentSignUpView(CreateView):
     model = User
     form_class = StudentSignUpForm
     template_name = 'accounts/register.html'
-
-    def get_context_data(self, **kwargs):
-        kwargs['user_type'] = 'student'
-        return super().get_context_data(**kwargs)
 
     def form_valid(self, form):
         user = form.save()

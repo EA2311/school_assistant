@@ -14,7 +14,7 @@
   </button>
   <div class="navbar-nav">
     <div class="nav-item text-nowrap">
-      <a class="nav-link px-3" href="{% url 'accounts:logout' %}">Вийти</a>
+      <a href="{% url 'accounts:logout' %}" class="btn btn-outline-secondary mx-2 my-2">Вийти</a>
     </div>
   </div>
 </header>
@@ -52,7 +52,11 @@
     </nav>
 
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
-
+ {% for s in students %}
+        <p>{{ s.user.last_name }} {{ s.user.first_name }} {{ s.user.patronymic }} - {{ s.user.email }}             <a href="{% url 'teacher:homework' pk s.user.id %}" class="btn btn-outline-primary">Виконані роботи</a>
+</p>
+<hr>
+ {% endfor %}
       </main>
   </div>
 </div>

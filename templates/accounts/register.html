@@ -16,7 +16,7 @@
 		{{ form | crispy }}
 		<button class="btn btn-primary" type="submit">Register</button>
 	</form>
-	<p class="text-center">If you already have an account, <a href="/accounts/login">login</a> instead.</p>
+	<p class="text-center">If you already have an account, <a href="{% url 'accounts:home' %}">login</a> instead.</p>
 </div>
 </body>
 </html>

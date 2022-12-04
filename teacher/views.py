@@ -1,7 +1,10 @@
-from django.shortcuts import render, redirect
+import random
+
+from django.shortcuts import redirect
 from django.views.generic import ListView, CreateView, DetailView
 
-from accounts.models import Teacher
+from accounts.models import Teacher, Student
+from student.models import StudentWork
 from teacher.forms import ClassroomCreateForm, SubjectCreateForm, HomeworkCreateForm
 from teacher.models import Classroom, Subject, Homework
 
@@ -23,7 +26,7 @@ class CreateClassroomsView(CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         teacher = Teacher.objects.get(user=self.request.user)
-        self.object.key = 122 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+        self.object.key = random.randint(100000, 999999)
         self.object.teacher = teacher
         self.object.save()
         return redirect('teacher:classrooms')
@@ -36,7 +39,11 @@ class DetailClassroomView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        classroom = Classroom.objects.get(id=self.kwargs['pk'])
+        students = Student.objects.filter(classroom=classroom)
+        context['students'] = students
         context['pk'] = self.kwargs['pk']
+
         return context
 
 
@@ -107,4 +114,19 @@ class CreateHomeworkView(CreateView):
         context['pk'] = self.kwargs['pk']
         subject = Subject.objects.get(id=self.kwargs['subj'])
         context['subject'] = subject
+        return context
+
+
+class StudentWorksView(ListView):
+    template_name = 'teacher/home_works.html'
+    context_object_name = 'home_works'
+
+    def get_queryset(self):
+        home_works = StudentWork.objects.filter(student=self.kwargs['student_id']).order_by('-send_date')
+        return home_works
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['pk'] = self.kwargs['pk']
+        context['st'] = self.kwargs['student_id']
         return context

@@ -1,12 +1,22 @@
+import os
+
 from django.db import models
 
 from accounts.models import Teacher
+
+
+def content_file_name(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = f"teacher_{instance.teacher.user.id}/{instance.class_name}.{ext}"
+    return filename
 
 
 class Classroom(models.Model):
     class_name = models.CharField(blank=False, max_length=20)
     key = models.CharField(blank=False, max_length=50)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+
+    image = models.ImageField(upload_to=content_file_name)
 
     def __str__(self):
         return self.class_name
