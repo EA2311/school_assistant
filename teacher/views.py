@@ -1,7 +1,8 @@
 import random
 
 from django.shortcuts import redirect
-from django.views.generic import ListView, CreateView, DetailView
+from django.urls import reverse, reverse_lazy
+from django.views.generic import ListView, CreateView, DetailView, DeleteView
 
 from accounts.models import Teacher, Student
 from student.models import StudentWork
@@ -17,6 +18,14 @@ class ClassroomsView(ListView):
         teacher = Teacher.objects.get(user=self.request.user)
         classrooms = Classroom.objects.filter(teacher=teacher)
         return classrooms
+
+
+class ClassroomDeleteView(DeleteView):
+    success_url = reverse_lazy('teacher:classrooms')
+    model = Classroom
+
+    def get(self, *a, **kw):
+        return self.delete(*a, **kw)
 
 
 class CreateClassroomsView(CreateView):
