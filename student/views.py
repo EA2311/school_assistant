@@ -1,15 +1,19 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
+from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import ListView, DetailView
 from django.core.exceptions import ObjectDoesNotExist
 
+from accounts.decorators import student_required
 from accounts.models import Student
 from teacher.models import Classroom, Subject, Homework, Mark
 from student.models import StudentWork
 
 
+@method_decorator([login_required, student_required], name='dispatch')
 class StudentClassroomView(View):
 
     def get(self, request):
@@ -29,6 +33,7 @@ class StudentClassroomView(View):
         return redirect('student:student_classrooms')
 
 
+@method_decorator([login_required, student_required], name='dispatch')
 class StudentHomeworksView(ListView):
     template_name = 'student/student_homeworks.html'
     context_object_name = 'home_tasks'
@@ -47,6 +52,7 @@ class StudentHomeworksView(ListView):
         return context
 
 
+@method_decorator([login_required, student_required], name='dispatch')
 class StudentDetailHomeworkView(DetailView):
     model = Homework
     template_name = 'student/detail_home_tasks.html'
@@ -54,13 +60,9 @@ class StudentDetailHomeworkView(DetailView):
 
     def post(self, request, subj, pk):
         student = Student.objects.get(user=request.user)
-        # try:
         ht = Homework.objects.get(id=pk)
         print(request.FILES.get('hw_image'), '--------------')
         StudentWork.objects.create(home_task=ht, text=request.POST.get('hw_text'), image=request.FILES.get('hw_image'), student=student)
-        # except (KeyError):
-        #     print('error')
-
         return HttpResponseRedirect(reverse('student:detail_home_tasks', args=(subj, pk,)))
 
     def get_context_data(self, **kwargs):
