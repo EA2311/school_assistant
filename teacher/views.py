@@ -1,15 +1,19 @@
 import random
 
 from django.shortcuts import redirect
-from django.urls import reverse, reverse_lazy
-from django.views.generic import ListView, CreateView, DetailView, DeleteView
+from django.urls import  reverse_lazy
+from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
+from accounts.decorators import teacher_required
 from accounts.models import Teacher, Student
 from student.models import StudentWork
 from teacher.forms import ClassroomCreateForm, SubjectCreateForm, HomeworkCreateForm
 from teacher.models import Classroom, Subject, Homework
 
 
+@method_decorator([login_required, teacher_required], name='dispatch')
 class ClassroomsView(ListView):
     template_name = 'teacher/classrooms.html'
     context_object_name = 'classrooms'
@@ -20,6 +24,7 @@ class ClassroomsView(ListView):
         return classrooms
 
 
+@method_decorator([login_required, teacher_required], name='dispatch')
 class ClassroomDeleteView(DeleteView):
     success_url = reverse_lazy('teacher:classrooms')
     model = Classroom
@@ -28,6 +33,7 @@ class ClassroomDeleteView(DeleteView):
         return self.delete(*a, **kw)
 
 
+@method_decorator([login_required, teacher_required], name='dispatch')
 class CreateClassroomsView(CreateView):
     template_name = 'teacher/create_classroom.html'
     form_class = ClassroomCreateForm
@@ -41,6 +47,15 @@ class CreateClassroomsView(CreateView):
         return redirect('teacher:classrooms')
 
 
+@method_decorator([login_required, teacher_required], name='dispatch')
+class ClassroomUpdateView(UpdateView):
+    model = Classroom
+    fields = ['class_name', 'key', 'image']
+    template_name = 'teacher/classroom_update.html'
+    success_url = reverse_lazy('teacher:classrooms')
+
+
+@method_decorator([login_required, teacher_required], name='dispatch')
 class DetailClassroomView(DetailView):
     model = Classroom
     template_name = 'teacher/classroom_detail.html'
@@ -56,6 +71,7 @@ class DetailClassroomView(DetailView):
         return context
 
 
+@method_decorator([login_required, teacher_required], name='dispatch')
 class SubjectsView(ListView):
     template_name = 'teacher/subjects.html'
     context_object_name = 'subjects'
@@ -73,6 +89,7 @@ class SubjectsView(ListView):
         return context
 
 
+@method_decorator([login_required, teacher_required], name='dispatch')
 class CreateSubjectView(CreateView):
     template_name = 'teacher/create_subjects.html'
     form_class = SubjectCreateForm
@@ -90,6 +107,7 @@ class CreateSubjectView(CreateView):
         return context
 
 
+@method_decorator([login_required, teacher_required], name='dispatch')
 class HomeworksView(ListView):
     template_name = 'teacher/home_tasks.html'
     context_object_name = 'home_tasks'
@@ -107,6 +125,7 @@ class HomeworksView(ListView):
         return context
 
 
+@method_decorator([login_required, teacher_required], name='dispatch')
 class CreateHomeworkView(CreateView):
     template_name = 'teacher/create_home_tasks.html'
     form_class = HomeworkCreateForm
@@ -126,6 +145,7 @@ class CreateHomeworkView(CreateView):
         return context
 
 
+@method_decorator([login_required, teacher_required], name='dispatch')
 class StudentWorksView(ListView):
     template_name = 'teacher/home_works.html'
     context_object_name = 'home_works'

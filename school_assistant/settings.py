@@ -22,7 +22,7 @@ DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 
-
+LOGIN_URL='accounts:home'
 LOGOUT_REDIRECT_URL = 'accounts:home'
 
 
