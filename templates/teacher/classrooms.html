@@ -1,57 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <style>
-.cards {
-  margin: 0 auto;
-  text-align: center;
-	display: -webkit-flex;
-	display: flex;
-  border-radius: 10px;
-	-webkit-justify-content: center;
-  justify-content: center;
-  -webkit-flex-wrap: wrap;
-	flex-wrap: wrap;
-	margin-top: 15px;
-	padding: 1.5%;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box; */
-  box-sizing: border-box; */
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-}
+{% extends 'teacher/base_teacher.html' %}
 
-.cards:hover {
-  box-shadow: 0 4px 10px rgba(0,0,0,0.16), 0 4px 10px rgba(0,0,0,0.23);
-}
+{% block title %}
+Мої класи
+{% endblock %}
 
+{% block page_name %}
+Мої класи
+{% endblock %}
 
-.vl {
-  border-left: 6px solid green;
-  height: 500px;
-  position: absolute;
-  left: 50%;
-  margin-left: -3px;
-  top: 0;
-}
-    </style>
-
-</head>
-<body>
-<header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom bg-primary">
-
-      <div class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0 px-5">
-          <h2 class=" text-white">Мої класи</h2>
-      </div>
-
-      <div class="col-md-3 text-end">
-        <button type="button" class="btn btn-outline-primary me-2">Login</button>
-            <a href="{% url 'accounts:logout' %}" class="btn btn-outline-light mx-4 my-2">Вийти</a>
-      </div>
-    </header>
+{% block content %}
 
 {% if not classrooms %}
 <h4>
@@ -59,59 +16,60 @@
 </h4>
 {% endif %}
 
-<div class="container-fluid ">
-    <div class="row row-cols-1 row-cols-md-4 g-4 px-4">
-        <br>
-        {% for c in classrooms %}
-        <div class="col">
-            <div class=" card cards card-2 text-center">
-                                    <a href="{% url 'teacher:detail_classroom' c.id %}" class="text-decoration-none">
+<div class="row row-cols-1 row-cols-md-4 g-4 px-4">
+    <br>
+    {% for c in classrooms %}
+    <div class="col">
+        <div class=" card cards card-2 text-center">
+            <a href="{% url 'teacher:detail_classroom' c.id %}" class="text-decoration-none">
 
                 <img src="{{ c.image.url }}" width="500" height="180" class="card-img-top">
-                                    </a>
-                <div class="card-body ">
-                    <a href="{% url 'teacher:detail_classroom' c.id %}" class="text-decoration-none"><h5
-                            class="nav-link link-dark">{{ c.class_name }}</h5></a>
-                    <div class="btn-group btn-group" role="group" aria-label="Small button group">
-                        <a href="{% url 'teacher:update_classroom' c.id %}" type="button" class="btn btn-outline-primary">Редагувати</a>
-                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">Видалити</button>
-                    </div>
+            </a>
+            <div class="card-body ">
+                <a href="{% url 'teacher:detail_classroom' c.id %}" class="text-decoration-none"><h5
+                        class="nav-link link-dark">{{ c.class_name }}</h5></a>
+                <div class="btn-group btn-group" role="group" aria-label="Small button group">
+                    <a href="{% url 'teacher:update_classroom' c.id %}" type="button" class="btn btn-outline-primary">Редагувати</a>
+                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal">Видалити
+                    </button>
                 </div>
             </div>
         </div>
-
-        <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Ви дійсно бажаєте видалити {{ c.class_name }} клас?</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-          Усі дані про учнів, предмети та оцінки цього класу буде остаточно видалено без можливості відновлення!
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Відмінити</button>
-        <a href="{% url 'teacher:delete_classroom' c.id %}" type="button" class="btn btn-danger">Видалити</a>
-      </div>
     </div>
-  </div>
-</div>
-        {% endfor %}
-        <div class="col" align="center">
-            <br><br><br><br><br>
-            <a class=" btn btn-outlina-primary mx-200" style="border-radius: 30px" href="{% url 'teacher:create_classroom' %}">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3Dcc3d5Lb1latb57H6sLv9iRIyIzrHNXDfw&usqp=CAU" width="60" height="60">
-            </a>
-            <br><br><br><br><br>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ви дійсно бажаєте видалити {{ c.class_name }}
+                        клас?</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Усі дані про учнів, предмети та оцінки цього класу буде остаточно видалено без можливості
+                    відновлення!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Відмінити</button>
+                    <a href="{% url 'teacher:delete_classroom' c.id %}" type="button"
+                       class="btn btn-danger">Видалити</a>
+                </div>
+            </div>
         </div>
     </div>
-    <br>
+    {% endfor %}
+    <div class="col" align="center">
+        <br><br><br><br><br>
+        <a class=" btn btn-outlina-primary mx-200" style="border-radius: 30px"
+           href="{% url 'teacher:create_classroom' %}">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3Dcc3d5Lb1latb57H6sLv9iRIyIzrHNXDfw&usqp=CAU"
+                 width="60" height="60">
+        </a>
+        <br><br><br><br><br>
+    </div>
 </div>
+<br>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-        crossorigin="anonymous"></script>
-</body>
-</html>
+{% endblock %}
