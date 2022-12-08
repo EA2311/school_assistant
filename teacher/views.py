@@ -108,6 +108,22 @@ class CreateSubjectView(CreateView):
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
+class SubjectUpdateView(UpdateView):
+    model = Subject
+    fields = ['subject_name', 'image']
+    template_name = 'teacher/subject_update.html'
+    #success_url = reverse_lazy(f'teacher:subjects')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cpk'] = self.kwargs['cpk']
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy('teacher:subjects', kwargs={'pk':self.kwargs['cpk']})
+
+
+@method_decorator([login_required, teacher_required], name='dispatch')
 class HomeworksView(ListView):
     template_name = 'teacher/home_tasks.html'
     context_object_name = 'home_tasks'

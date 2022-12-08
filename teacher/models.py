@@ -5,7 +5,7 @@ from django.db import models
 from accounts.models import Teacher
 
 
-def content_file_name(instance, filename):
+def classroom_file_name(instance, filename):
     ext = filename.split('.')[-1]
     filename = f"teacher_{instance.teacher.user.id}/{instance.class_name}.{ext}"
     return filename
@@ -16,15 +16,23 @@ class Classroom(models.Model):
     key = models.CharField(blank=False, max_length=50)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
 
-    image = models.ImageField(upload_to=content_file_name)
+    image = models.ImageField(upload_to=classroom_file_name)
 
     def __str__(self):
         return self.class_name
 
 
+def subject_file_name(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = f"teacher_{instance.classroom.class_name}/{instance.subject_name}.{ext}"
+    return filename
+
+
 class Subject(models.Model):
     subject_name = models.CharField(max_length=50)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
+
+    image = models.ImageField(upload_to=subject_file_name, default='https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png')
 
     def __str__(self):
         return self.subject_name

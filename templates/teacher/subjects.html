@@ -9,66 +9,92 @@
 {% endblock %}
 
 {% block content %}
+<div class="row">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse d-flex" style="height:100vh">
+        <div class="position-sticky pt-2 sidebar-sticky">
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a href="{% url 'teacher:detail_classroom' pk %}" class="nav-link link-dark"
+                       aria-current="page">
+                        Мій клас
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'teacher:subjects' pk %}" class="nav-link active">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-chevron-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                        Предмети
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link link-dark">
+                        Розклад
+                    </a>
+                </li>
 
-    <div class="row">
-        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" style="height:100vh">
-            <div class="position-sticky pt-3 sidebar-sticky">
-                <ul class="nav nav-pills flex-column mb-auto">
-                    <li class="nav-item">
-                        <a href="{% url 'teacher:detail_classroom' pk %}" class="nav-link link-dark"
-                           aria-current="page">
-                            Мій клас
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'teacher:subjects' pk %}" class="nav-link active">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-chevron-right" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd"
-                                      d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
-                            </svg>
-                            Предмети
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link link-dark">
-                            Розклад
-                        </a>
-                    </li>
+                <hr>
+                <li>
+                    <a href="{% url 'teacher:create_subjects' pk %}" class="nav-link link-dark">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-plus-lg" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                  d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+                        </svg>
+                        Новий предмет
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
-                    <hr>
-                    <li>
-                        <a href="{% url 'teacher:create_subjects' pk %}" class="nav-link link-dark">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-plus-lg" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd"
-                                      d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
-                            </svg>
-                            Новий предмет
-                        </a>
-                    </li>
-                </ul>
-
-            </div>
-        </nav>
-
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
-            <div class="row row-cols-1 row-cols-md-4 g-4">
-                <br>
-                {% for s in subjects %}
-                <div class="col">
-                    <div class="card cards card-2 text-center">
-                        <img src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-                             class="card-img-top">
-                        <div class="card-body">
-                            <h5 class="card-title"><a href="{% url 'teacher:home_tasks' pk s.id %}"
-                                                      class="nav-link link-dark text-center">{{ s.subject_name }}</a>
-                            </h5>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            <br>
+            {% for s in subjects %}
+            <div class="col">
+                <div class="card cards card-2 text-center">
+                    <a href="{% url 'teacher:home_tasks' pk s.id %}" class="text-decoration-none">
+                        <img src="{{ s.image.url }}" width="500" height="180" class="card-img-top">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="{% url 'teacher:home_tasks' pk s.id %}"
+                                                  class="nav-link link-dark text-center">{{ s.subject_name }}</a>
+                        </h5>
+                        <div class="btn-group btn-group" role="group" aria-label="Small button group">
+                            <a href="{% url 'teacher:update_subject' pk s.id %}" type="button" class="btn btn-outline-primary">Редагувати</a>
+                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal">Видалити
+                            </button>
                         </div>
                     </div>
                 </div>
-                {% endfor %}
             </div>
-        </main>
+
+             <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ви дійсно бажаєте видалити предмет {{ s.subject_name }} ?</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Усі дані про цей предмет та його домащні завдання буде остаточно видалено без можливості
+                    відновлення!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Відмінити</button>
+                    <a href="#" type="button"
+                       class="btn btn-danger">Видалити</a>
+                </div>
+            </div>
+        </div>
     </div>
+            {% endfor %}
+        </div>
+    </main>
+</div>
 {% endblock %}

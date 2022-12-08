@@ -1,21 +1,20 @@
 {% extends 'teacher/base_teacher.html' %}
 
 {% block title %}
-Редагування класу {{ object.class_name }}
+Редагування предмету {{ object.subject_name }}
 {% endblock %}
 
 {% block page_name %}
-Редагування класу {{ object.class_name }}
+Редагування предмету {{ object.subject_name }}
 {% endblock %}
 
 {% block content %}
-
     <div class="row">
         <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" style="height:100vh">
             <div class="position-sticky pt-3 sidebar-sticky">
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li class="nav-item">
-                        <a href="{% url 'teacher:classrooms' %}" class="nav-link active" aria-current="page">
+                        <a href="{% url 'teacher:subjects' cpk %}" class="nav-link active" aria-current="page">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                  class="bi bi-backspace-fill" viewBox="0 0 16 16">
                                 <path d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2V3zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8 5.829 5.854z"/>
@@ -30,18 +29,14 @@
 
             <div class="row">
                 <div class="col-md-7">
-                    <h2>Введіть нову назву класу</h2>
+                    <h2>Введіть нову назву предмету</h2>
                     <br>
                     <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
-                        <input type="text" class="form-control" name="class_name" maxlength="20" required id="id_class_name" value="{{ object.class_name }}">
+                        <input type="text" class="form-control" name="subject_name" maxlength="20" required id="id_subject_name" value="{{ object.subject_name }}">
                         <br>
-                                                 <h2> <label>Введіть новий ключ класу </label></h2>
-
-                      <input type="text" class="form-control" name="key" maxlength="50" required id="id_key" value="{{ object.key }}">
-                        <br>
-                        <div class="form-group files">
-                           <h2> <label>Виберіть фото обкладинки класу </label></h2>
+                       <div class="form-group files">
+                           <h2> <label>Виберіть фото обкладинки предмету </label></h2>
                             {{ form.image }}
                         </div>
                         <br> <br>
