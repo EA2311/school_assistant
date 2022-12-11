@@ -20,7 +20,7 @@
     <br>
     {% for c in classrooms %}
     <div class="col">
-        <div class=" card cards card-2 text-center">
+        <div class="card cards card-2 text-center">
             <a href="{% url 'teacher:detail_classroom' c.id %}" class="text-decoration-none">
 
                 <img src="{{ c.image.url }}" width="500" height="180" class="card-img-top">
@@ -31,7 +31,7 @@
                 <div class="btn-group btn-group" role="group" aria-label="Small button group">
                     <a href="{% url 'teacher:update_classroom' c.id %}" type="button" class="btn btn-outline-primary">Редагувати</a>
                     <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">Видалити
+                            data-bs-target="#exampleModal{{ c.id }}">Видалити
                     </button>
                 </div>
             </div>
@@ -39,7 +39,7 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal{{ c.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -62,7 +62,7 @@
     {% endfor %}
     <div class="col" align="center">
         <br><br><br><br><br>
-        <a class=" btn btn-outlina-primary mx-200" style="border-radius: 30px"
+        <a class=" btn btn-outlina-primary mx-200 " data-toggle="tooltip" data-placement="top" title="Додати новий клас" style="border-radius: 30px"
            href="{% url 'teacher:create_classroom' %}">
             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3Dcc3d5Lb1latb57H6sLv9iRIyIzrHNXDfw&usqp=CAU"
                  width="60" height="60">

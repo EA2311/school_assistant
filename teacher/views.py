@@ -64,10 +64,9 @@ class DetailClassroomView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         classroom = Classroom.objects.get(id=self.kwargs['pk'])
-        students = Student.objects.filter(classroom=classroom)
+        students = Student.objects.filter(classroom=classroom).order_by('user__last_name')
         context['students'] = students
         context['pk'] = self.kwargs['pk']
-
         return context
 
 
@@ -105,6 +104,17 @@ class CreateSubjectView(CreateView):
         context = super().get_context_data(**kwargs)
         context['pk'] = self.kwargs['pk']
         return context
+
+
+@method_decorator([login_required, teacher_required], name='dispatch')
+class SubjectDeleteView(DeleteView):
+    model = Subject
+
+    def get(self, *a, **kw):
+        return self.delete(kw['pk'])
+
+    def get_success_url(self):
+        return reverse_lazy('teacher:subjects', kwargs={'pk':self.kwargs['cpk']})
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')

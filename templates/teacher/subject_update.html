@@ -36,11 +36,15 @@
                         <input type="text" class="form-control" name="subject_name" maxlength="20" required id="id_subject_name" value="{{ object.subject_name }}">
                         <br>
                        <div class="form-group files">
-                           <h2> <label>Виберіть фото обкладинки предмету </label></h2>
-                            {{ form.image }}
+                           <h2> <label>Виберіть нову обкладинку предмету </label></h2>
+                             Поточне зображення:  <br>
+                           <image src="{{ object.image.url }}" width="300" height="200" class="mx-4">
+                           <br>
+                             Змінити:
+                            <input type="file" name="image" accept="image/*" id="id_image">
                         </div>
                         <br> <br>
-                        <button class="btn btn-primary" type="submit">Зберегти</button>
+                        <button class="btn btn-primary" style="width: 600px;" type="submit">Зберегти</button>
                     </form>
                 </div>
             </div>

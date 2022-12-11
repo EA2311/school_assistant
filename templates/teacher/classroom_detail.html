@@ -40,11 +40,33 @@
     </nav>
 
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+          <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">№</th>
+      <th scope="col">Прізвище</th>
+      <th scope="col">Ім'я</th>
+      <th scope="col">По батькові</th>
+        <th scope="col">Телефон</th>
+        <th scope="col">Роботи</th>
+
+    </tr>
+  </thead>
+  <tbody>
+
  {% for s in students %}
-        <p>{{ s.user.last_name }} {{ s.user.first_name }} {{ s.user.patronymic }} - {{ s.user.email }}             <a href="{% url 'teacher:homework' pk s.user.id %}" class="btn btn-outline-primary">Виконані роботи</a>
-</p>
-<hr>
+  <tr>
+      <th scope="row">{{ forloop.counter }}</th>
+      <td>{{ s.user.last_name }}</td>
+      <td>{{ s.user.first_name }} </td>
+      <td>{{ s.user.patronymic }}</td>
+      <td>{{ s.user.phone_number }}</td>
+      <td>            <a href="{% url 'teacher:homework' pk s.user.id %}" class="btn btn-outline-primary">Виконані роботи</a>
+</td>
+    </tr>
  {% endfor %}
+                </tbody>
+</table>
       </main>
   </div>
 {% endblock %}

@@ -57,7 +57,7 @@
             <div class="col">
                 <div class="card cards card-2 text-center">
                     <a href="{% url 'teacher:home_tasks' pk s.id %}" class="text-decoration-none">
-                        <img src="{{ s.image.url }}" width="500" height="180" class="card-img-top">
+                        <img src="{{ s.image.url }}"  class="card-img-top max-width-200" height="180">
                     </a>
                     <div class="card-body">
                         <h5 class="card-title"><a href="{% url 'teacher:home_tasks' pk s.id %}"
@@ -66,7 +66,7 @@
                         <div class="btn-group btn-group" role="group" aria-label="Small button group">
                             <a href="{% url 'teacher:update_subject' pk s.id %}" type="button" class="btn btn-outline-primary">Редагувати</a>
                             <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal">Видалити
+                                    data-bs-target="#exampleModal{{ s.id }}">Видалити
                             </button>
                         </div>
                     </div>
@@ -74,7 +74,7 @@
             </div>
 
              <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal{{ s.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -87,7 +87,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Відмінити</button>
-                    <a href="#" type="button"
+                    <a href="{% url 'teacher:delete_subject' pk s.id %}" type="button"
                        class="btn btn-danger">Видалити</a>
                 </div>
             </div>
