@@ -61,7 +61,15 @@
       <td>{{ s.user.first_name }} </td>
       <td>{{ s.user.patronymic }}</td>
       <td>{{ s.user.phone_number }}</td>
-      <td>            <a href="{% url 'teacher:homework' pk s.user.id %}" class="btn btn-outline-primary">Виконані роботи</a>
+      <td>
+          <a href="{% url 'teacher:homework' pk s.user.id %}" class="btn btn-primary position-relative">
+          Виконані роботи
+              {% if s.unchecked > 0%}
+      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+    {{ s.unchecked }}
+  </span>
+              {% endif %}
+          </a>
 </td>
     </tr>
  {% endfor %}

@@ -12,6 +12,8 @@ class StudentWork(models.Model):
 
     text = models.TextField()
     image = models.ImageField(upload_to='homework_images')
+    is_checked = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.home_task.subject} - {self.home_task} - {self.student}'
+

@@ -1,5 +1,6 @@
 import random
 
+from django.db.models import Count, Q
 from django.shortcuts import redirect
 from django.urls import  reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
@@ -64,9 +65,11 @@ class DetailClassroomView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         classroom = Classroom.objects.get(id=self.kwargs['pk'])
-        students = Student.objects.filter(classroom=classroom).order_by('user__last_name')
-        context['students'] = students
         context['pk'] = self.kwargs['pk']
+        students = Student.objects.filter(classroom=classroom).order_by('user__last_name')
+        unchecked = Count('studentwork', filter=Q(studentwork__is_checked=False))
+        students = students.annotate(unchecked=unchecked)
+        context['students'] = students
         return context
 
 
@@ -122,7 +125,6 @@ class SubjectUpdateView(UpdateView):
     model = Subject
     fields = ['subject_name', 'image']
     template_name = 'teacher/subject_update.html'
-    #success_url = reverse_lazy(f'teacher:subjects')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -183,5 +185,6 @@ class StudentWorksView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['pk'] = self.kwargs['pk']
-        context['st'] = self.kwargs['student_id']
+
+        context['st'] = Student.objects.get(user__id=self.kwargs['student_id'])
         return context
