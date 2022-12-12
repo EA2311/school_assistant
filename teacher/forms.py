@@ -1,6 +1,6 @@
 from django import forms
 
-from teacher.models import Classroom, Subject, Homework
+from teacher.models import Classroom, Subject, HomeTask
 
 
 class ClassroomCreateForm(forms.ModelForm):
@@ -17,6 +17,6 @@ class SubjectCreateForm(forms.ModelForm):
 
 class HomeworkCreateForm(forms.ModelForm):
     class Meta:
-        model = Homework
+        model = HomeTask
         exclude = ('subject', )
 

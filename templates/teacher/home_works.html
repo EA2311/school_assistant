@@ -10,47 +10,70 @@
 {% endblock %}
 
 {% block content %}
-  <div class="row">
+<div class="row">
     <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" style="height:100vh">
-      <div class="position-sticky pt-3 sidebar-sticky">
-        <ul class="nav nav-pills flex-column mb-auto">
-             <li class="nav-item">
-                <a href="{% url 'teacher:detail_classroom' pk %}" class="nav-link link-dark" aria-current="page">
-                    Мій клас
-                </a>
-            </li>
-            <li>
-                <a href="{% url 'teacher:subjects' pk %}" class="nav-link active">
-                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                         class="bi bi-chevron-right" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd"
-                              d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
-                    </svg>
-                    Предмети
-                </a>
-            </li>
-            <li>
-                <a href="#" class="nav-link link-dark">
-                    Розклад
-                </a>
-            </li>
+        <div class="position-sticky pt-3 sidebar-sticky">
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a href="{% url 'teacher:detail_classroom' pk %}" class="nav-link link-dark" aria-current="page">
+                        Мій клас
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'teacher:subjects' pk %}" class="nav-link active">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-chevron-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                        Предмети
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link link-dark">
+                        Розклад
+                    </a>
+                </li>
 
-            <hr>
+                <hr>
 
             </ul>
-      </div>
+        </div>
     </nav>
 
-      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
 
-{% for h in home_works %}
-    <p>{{ h.home_task.subject }} </p>
-        <p>{{ h.text }} </p>
-        <p>{{ h.image }} </p>
-        <p>{{ h.send_date }} </p>
+        <div class="accordion mx-3" id="accordionExample">
 
-<hr>
- {% endfor %}
-      </main>
-  </div>
+            {% for h in home_works %}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="true"
+                            aria-controls="collapse{{ forloop.counter }}">
+                        {{ h.home_task.subject }} {{ h.home_task.task }} {{ h.send_date | date:'Y-m-d'}}
+
+                        {% if h.is_checked %}
+                        <span class="mx-3  badge bg-warning">Перевірено</span>
+                        {% else %}
+                        <span class="mx-3  badge bg-danger">Нове</span>
+                        {% endif %}
+
+
+                    </button>
+                </h2>
+                <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse "
+                     aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <p>{{ h.text }}</p>
+                        <image src="{{ h.image.url }}" width="300" height="180"/>
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+        </div>
+
+    </main>
+</div>
 {% endblock %}

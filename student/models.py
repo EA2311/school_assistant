@@ -1,11 +1,11 @@
 from django.db import models
 
 from accounts.models import Student
-from teacher.models import Homework
+from teacher.models import HomeTask
 
 
 class StudentWork(models.Model):
-    home_task = models.ForeignKey(Homework, on_delete=models.CASCADE)
+    home_task = models.ForeignKey(HomeTask, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
 
     send_date = models.DateTimeField(auto_now_add=True)

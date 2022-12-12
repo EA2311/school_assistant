@@ -2,7 +2,7 @@ import random
 
 from django.db.models import Count, Q
 from django.shortcuts import redirect
-from django.urls import  reverse_lazy
+from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -11,7 +11,7 @@ from accounts.decorators import teacher_required
 from accounts.models import Teacher, Student
 from student.models import StudentWork
 from teacher.forms import ClassroomCreateForm, SubjectCreateForm, HomeworkCreateForm
-from teacher.models import Classroom, Subject, Homework
+from teacher.models import Classroom, Subject, HomeTask, ImagesHT
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
@@ -117,7 +117,7 @@ class SubjectDeleteView(DeleteView):
         return self.delete(kw['pk'])
 
     def get_success_url(self):
-        return reverse_lazy('teacher:subjects', kwargs={'pk':self.kwargs['cpk']})
+        return reverse_lazy('teacher:subjects', kwargs={'pk': self.kwargs['cpk']})
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
@@ -132,17 +132,17 @@ class SubjectUpdateView(UpdateView):
         return context
 
     def get_success_url(self):
-        return reverse_lazy('teacher:subjects', kwargs={'pk':self.kwargs['cpk']})
+        return reverse_lazy('teacher:subjects', kwargs={'pk': self.kwargs['cpk']})
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
-class HomeworksView(ListView):
+class HomeTasksView(ListView):
     template_name = 'teacher/home_tasks.html'
     context_object_name = 'home_tasks'
 
     def get_queryset(self):
         subject = Subject.objects.get(id=self.kwargs['subj'])
-        home_tasks = Homework.objects.filter(subject=subject).order_by('-pub_date')
+        home_tasks = HomeTask.objects.filter(subject=subject).order_by('-pub_date')
         return home_tasks
 
     def get_context_data(self, **kwargs):
@@ -150,19 +150,28 @@ class HomeworksView(ListView):
         context['pk'] = self.kwargs['pk']
         subject = Subject.objects.get(id=self.kwargs['subj'])
         context['subject'] = subject
+        images = ImagesHT.objects.filter(home_task__subject=subject)
+        context['images'] = images
+        print(images)
         return context
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
-class CreateHomeworkView(CreateView):
+class CreateHomeTaskView(CreateView):
     template_name = 'teacher/create_home_tasks.html'
     form_class = HomeworkCreateForm
 
     def form_valid(self, form):
-        self.object = form.save(commit=False)
+        instance = form.save(commit=False)
         subject = Subject.objects.get(id=self.kwargs['subj'])
-        self.object.subject = subject
-        self.object.save()
+        instance.subject = subject
+        instance.save()
+
+        images = self.request.FILES.getlist('images')
+        if images:
+            for image in images:
+                ImagesHT.objects.create(image=image, home_task=instance)
+
         return redirect('teacher:home_tasks', pk=self.kwargs['pk'], subj=self.kwargs['subj'])
 
     def get_context_data(self, **kwargs):

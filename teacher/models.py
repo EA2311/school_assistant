@@ -32,19 +32,33 @@ class Subject(models.Model):
     subject_name = models.CharField(max_length=50)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
 
-    image = models.ImageField(upload_to=subject_file_name, default='https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png')
+    image = models.ImageField(upload_to=subject_file_name, default='placeholder-image.png')
 
     def __str__(self):
         return self.subject_name
 
 
-class Homework(models.Model):
+class HomeTask(models.Model):
     task = models.TextField(max_length=400)
     pub_date = models.DateTimeField(auto_now_add=True)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.task} - {self.pub_date}'
+
+
+def ht_file_name(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = f"teacher_{instance.home_task.subject.classroom.teacher.user.id}/{instance.home_task.subject.subject_name}/{instance.home_task}.{ext}"
+    return filename
+
+
+class ImagesHT(models.Model):
+    image = models.ImageField(upload_to=ht_file_name, null=False, blank=False)
+    home_task = models.ForeignKey(HomeTask, on_delete=models.CASCADE, null=False)
+
+    def __str__(self):
+        return f'{self.image} - {self.home_task}'
 
 
 class Mark(models.Model):

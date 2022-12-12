@@ -9,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from accounts.decorators import student_required
 from accounts.models import Student
-from teacher.models import Classroom, Subject, Homework, Mark
+from teacher.models import Classroom, Subject, HomeTask, Mark
 from student.models import StudentWork
 
 
@@ -40,7 +40,7 @@ class StudentHomeworksView(ListView):
 
     def get_queryset(self):
         subject = Subject.objects.get(id=self.kwargs['subj'])
-        home_tasks = Homework.objects.filter(subject=subject).order_by('-pub_date')
+        home_tasks = HomeTask.objects.filter(subject=subject).order_by('-pub_date')
         return home_tasks
 
     def get_context_data(self, **kwargs):
@@ -54,13 +54,13 @@ class StudentHomeworksView(ListView):
 
 @method_decorator([login_required, student_required], name='dispatch')
 class StudentDetailHomeworkView(DetailView):
-    model = Homework
+    model = HomeTask
     template_name = 'student/detail_home_tasks.html'
     context_object_name = 'home_task'
 
     def post(self, request, subj, pk):
         student = Student.objects.get(user=request.user)
-        ht = Homework.objects.get(id=pk)
+        ht = HomeTask.objects.get(id=pk)
         print(request.FILES.get('hw_image'), '--------------')
         StudentWork.objects.create(home_task=ht, text=request.POST.get('hw_text'), image=request.FILES.get('hw_image'), student=student)
         return HttpResponseRedirect(reverse('student:detail_home_tasks', args=(subj, pk,)))
