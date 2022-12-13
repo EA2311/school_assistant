@@ -47,7 +47,15 @@ class StudentHomeworksView(ListView):
         context = super().get_context_data(**kwargs)
         subject = Subject.objects.get(id=self.kwargs['subj'])
         context['subject'] = subject
-        context['student'] = self.request.user
+        student = Student.objects.get(user=self.request.user)
+        context['student'] = student
+        subjects = Subject.objects.filter(classroom=student.classroom)
+        context["subjects"] = subjects
+        try:
+            hw = StudentWork.objects.filter(home_task__subject=subject, student__user=self.request.user)
+            context['hws'] = hw
+        except ObjectDoesNotExist:
+            pass
 
         return context
 

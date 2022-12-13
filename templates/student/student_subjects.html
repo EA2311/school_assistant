@@ -1,62 +1,50 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-</head>
-<body>
+{% extends 'student/base_student.html' %}
 
-<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="">{{ student.classroom.class_name }} клас</a>
-    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
-            data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
-            aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="navbar-nav">
-        <div class="nav-item text-nowrap">
-            <a href="{% url 'accounts:logout' %}" class="btn btn-outline-secondary mx-2 my-2">Вийти</a>
-        </div>
-    </div>
-</header>
+{% block title %}
+Предмети
+{% endblock %}
 
-<div class="container-fluid text-center">
+{% block page_name %}
+Предмети
+{% endblock %}
+
+{% block content %}
     {% if not student.classroom %}
     <form class="row g-3" method="post">
         {% csrf_token %}
         <div class="col-auto">
-            <label for="key" class="">Classroom key: </label>
+            <label for="key" class="">Код класу: </label>
             <input type="text" class="form-control-plaintext" name="key" id="key">
         </div>
         <div class="col-auto">
-            <button type="submit" class="btn btn-primary mb-3">Confirm</button>
+            <button type="submit" class="btn btn-primary mb-3">Увійти</button>
         </div>
     </form>
     {% else %}
+
     <div class="row row-cols-1 row-cols-md-4 g-4 py-4 px-4">
         <br>
         {% for s in subjects %}
         <div class="col">
-            <div class="card">
-                <img src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-                     class="card-img-top">
+        <div class="card cards card-2 text-center">
+            <a href="{% url 'student:home_works' s.id %}" class="text-decoration-none">
+                <img src="{{ s.image.url }}" class="card-img-top" height="200">
+            </a>
                 <div class="card-body">
                     <h5 class="card-title"><a href="{% url 'student:home_works' s.id %}"
                                               class="nav-link link-dark text-center">{{ s.subject_name }}</a></h5>
                 </div>
             </div>
         </div>
+
+
+
+
+
+
         {% endfor %}
     </div>
     {% endif %}
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-        crossorigin="anonymous"></script>
-</body>
-</html>
+{% endblock %}
 
 

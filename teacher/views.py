@@ -11,7 +11,7 @@ from accounts.decorators import teacher_required
 from accounts.models import Teacher, Student
 from student.models import StudentWork
 from teacher.forms import ClassroomCreateForm, SubjectCreateForm, HomeworkCreateForm
-from teacher.models import Classroom, Subject, HomeTask, ImagesHT
+from teacher.models import Classroom, Subject, HomeTask, ImagesHT, Mark
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
@@ -42,7 +42,7 @@ class CreateClassroomsView(CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         teacher = Teacher.objects.get(user=self.request.user)
-        self.object.key = random.randint(100000, 999999)
+        self.object.key = random.randint(100000000000, 999999999000)
         self.object.teacher = teacher
         self.object.save()
         return redirect('teacher:classrooms')
@@ -152,7 +152,6 @@ class HomeTasksView(ListView):
         context['subject'] = subject
         images = ImagesHT.objects.filter(home_task__subject=subject)
         context['images'] = images
-        print(images)
         return context
 
 
@@ -194,6 +193,24 @@ class StudentWorksView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['pk'] = self.kwargs['pk']
+        student = Student.objects.get(user__id=self.kwargs['student_id'])
+        context['st'] = student
 
-        context['st'] = Student.objects.get(user__id=self.kwargs['student_id'])
+        images = ImagesHT.objects.filter(home_task__subject__classroom__id=self.kwargs['pk'])
+        context['images'] = images
+
+        marks = Mark.objects.filter(homework__student=student)
+        context['marks'] = marks
+
         return context
+
+    def post(self, request, *args, **kwargs):
+        mark = request.POST.get('mark')
+        comment = request.POST.get('comment')
+        teacher = Teacher.objects.get(user=request.user)
+        hw = StudentWork.objects.get(id=request.POST.get('submit'))
+
+        Mark.objects.create(mark=mark, comment=comment, teacher=teacher, homework=hw)
+        hw.is_checked = True
+        hw.save()
+        return redirect('teacher:homework', self.kwargs['pk'], hw.student.user.id)

@@ -81,15 +81,14 @@
 </head>
 <body>
 
-<header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-1 border-bottom bg-primary sticky-top">
+<header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-1 border-bottom bg-success sticky-top">
 
       <div class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0 px-5">
           <h2 class=" text-white"> {% block page_name %}{% endblock %}</h2>
       </div>
 
       <div class="col-md-3 text-end">
-          <a href="{% url 'teacher:classrooms' %}" class="btn btn-outline-light my-2">Змінити клас</a>
-          <a href="{% url 'accounts:logout' %}" class="btn btn-outline-dark ms-2 me-5 my-2">Вийти</a>
+          <a href="{% url 'accounts:logout' %}" class="btn btn-outline-light ms-2 me-5 my-2">Вийти</a>
       </div>
 </header>
 

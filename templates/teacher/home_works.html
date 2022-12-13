@@ -51,22 +51,65 @@
                     <button class="accordion-button" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="true"
                             aria-controls="collapse{{ forloop.counter }}">
-                        {{ h.home_task.subject }} {{ h.home_task.task }} {{ h.send_date | date:'Y-m-d'}}
+                        {{ h.home_task.subject }} | Домашня робота | {{ h.send_date | date:'d.m.Y H:i'}}
 
                         {% if h.is_checked %}
-                        <span class="mx-3  badge bg-warning">Перевірено</span>
+                        <span class="mx-3  badge bg-secondary">Перевірено</span>
                         {% else %}
                         <span class="mx-3  badge bg-danger">Нове</span>
                         {% endif %}
-
-
                     </button>
                 </h2>
                 <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse "
                      aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <p>{{ h.text }}</p>
-                        <image src="{{ h.image.url }}" width="300" height="180"/>
+                        <div class="container text-center">
+                            <div class="row">
+                                <div class="col align-self-start">
+                                    <h5>Завдання</h5>
+                                    <p>{{ h.home_task.task }}</p>
+                                    <div class="row">
+                                        <div class="col-md">
+                                                {% for image in images %}
+                                                {% if image.home_task.id == h.home_task.id %}
+                                                <a href="{{ image.image.url }}" class="col-sm-2"
+                                                   data-lightbox="ht-images{{ h }}">
+                                                    <img src="{{ image.image.url }}" width="100" height="100" class="me-4">
+                                                </a>
+                                                {% endif %}
+                                                {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col align-self-start bg-light">
+                                    <h5>Домашня робота</h5>
+
+                                    <p>{{ h.text }}</p>
+                                    {% if h.image %}
+                                    <image src="{{ h.image.url }}" width="300" height="180"/>
+                                    {% endif %}
+                                </div>
+                                <div class="col align-self-start">
+                                    <h5>Оцінка</h5>
+                                    {% if not h.is_checked %}
+                                    <form method="POST" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <input type="text" class="form-control" name="mark" maxlength="20" required id="id_mark">
+                                        <br>
+                                        <h5>Коментар</h5>
+                                        <input type="text" class="form-control" name="comment" maxlength="100" required id="id_comment">
+                                        <br>
+                                        <button class="btn btn-primary" type="submit" name="submit" value="{{ h.id }}">Зберегти</button>
+                                    </form>
+                                    {% else %}
+                                    {% for m in marks %}
+                                        {{ m.mark }}
+                                        {{ m.comment }}
+                                    {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

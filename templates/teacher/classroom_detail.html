@@ -75,6 +75,36 @@
  {% endfor %}
                 </tbody>
 </table>
+          <br>
+          <div class="row">
+              <div class="col">
+                  <h4>Код доступу: </h4>
+              </div>
+
+              <div class="col-5">
+                  <input class="form-control" type="text" value="{{ classroom.key }}" id="key" disabled readonly>
+              </div>
+
+              <div class="col-4">
+                  <button class="btn btn-outline-secondary" onclick="myFunction()">Скопіювати</button>
+              </div>
+          </div>
       </main>
   </div>
+<script>
+function myFunction() {
+  // Get the text field
+  var copyText = document.getElementById("key");
+
+  // Select the text field
+  copyText.select();
+  copyText.setSelectionRange(0, 99999); // For mobile devices
+
+   // Copy the text inside the text field
+  navigator.clipboard.writeText(copyText.value);
+
+  // Alert the copied text
+  alert("Скопіювати ключ класу: " + copyText.value);
+}
+</script>
 {% endblock %}
