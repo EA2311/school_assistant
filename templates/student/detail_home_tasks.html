@@ -10,7 +10,7 @@
 
 {% block content %}
 <div class="row">
-    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse d-flex" style="height:150vh">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse d-flex" style="height:130vh">
         <div class="position-sticky pt-2 sidebar-sticky">
             <ul class="nav nav-pills flex-column mb-auto">
                 <li class="nav-item">
@@ -29,69 +29,74 @@
     </nav>
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <!--Home Task-->
         <div class="row">
-        <h2 class="fw  py-2">Завдання </h2>                <br>
-
-        <textarea disabled readonly rows="6">{{ home_task.task }}</textarea>
+            <h2 class="fw  py-2">Завдання </h2>                <br>
+            <textarea disabled readonly rows="6">{{ home_task.task }}</textarea>
             {% for image in images %}
             <a href="{{ image.image.url }}" class="px-2 py-2" data-lightbox="ht-images">
-                <img src="{{ image.image.url }}" >
+                <img src="{{ image.image.url }}">
             </a>
             {% endfor %}
             <p>Задано: {{ home_task.pub_date | date:'d.m.Y'}}</p>
-            </div>
+        </div>
         <hr>
         <br>
         {% if not hw %}
-                <div class="row">
-
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <fieldset>
-                <legend><h2 class="fw ">Моя робота</h2></legend>                <br>
-
-                {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-                <h4 class="fw-light">Введіть текст:</h4>
-                <textarea class="form-control" type="text" name="hw_text" id="hw_text" rows="3"></textarea><br>
-                <br>
-                <br>
-        <h1>Завантажте зображення за потреби</h1>
-
-                <div class="form-group files">
-                           <h4 class="fw-light">Виберіть фото, якщо необхідно:</h4>
-                    <input type="file" name="hw_images" id="hw_images" accept="image/*" multiple>
-                        </div>
-            </fieldset>
-            <br>
-            <button class="btn btn-success" type="submit">Надіслати</button>
-        </form>
-
-                                </div><br>
-        {% else %}
-
-                <div class="row">
-                <h2 class="fw ">Моя робота</h2>
+        <!--Homework Form-->
+        <div class="row">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <fieldset>
+                    <legend><h2 class="fw ">Моя робота</h2></legend>
                     <br>
+                    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+                    <h4 class="fw-light">Введіть текст:</h4>
+                    <textarea class="form-control" type="text" name="hw_text" id="hw_text" rows="3"></textarea><br>
 
-        <textarea disabled readonly>{{ hw.text }}</textarea>
-                    <div class="row">
-                                        <div class="col-md">
-                                                {% for image in images_sw %}
-                                                <a href="{{ image.image.url }}" class="col-sm-2"
-                                                   data-lightbox="ht-images{{ h }}">
-                                                    <img src="{{ image.image.url }}" width="100" height="100" class="me-4">
-                                                </a>
-                                                {% endfor %}
-                                        </div>
-                                    </div>
-        <p>Надіслано: {{ hw.send_date | date:'d.m.Y' }}</p>
+                    <h1>Завантажте зображення за потреби</h1>
 
-        {% if mark %}
-        <hr>
-        <p>{{ mark.mark }}</p>
-        <p>{{ mark.comment }}</p>
-        {% endif %}
+                    <div class="form-group files">
+                        <h4 class="fw-light">Виберіть фото, якщо необхідно:</h4>
+                        <input type="file" name="hw_images" id="hw_images" accept="image/*" multiple>
+                    </div>
+                </fieldset>
+                <br>
+                <button class="btn btn-success" type="submit">Надіслати</button>
+            </form>
+
+        </div>
+        <br>
+        {% else %}
+        <!--Homework-->
+        <div class="row">
+            <h2 class="fw ">Моя робота</h2>
+            <br>
+            {% if hw.text %}
+            <textarea disabled readonly>{{ hw.text }}</textarea>
+            {% endif %}
+            <div class="row">
+                <div class="col-md">
+                    {% for image in images_sw %}
+                    <a href="{{ image.image.url }}" class="col-sm-2"
+                       data-lightbox="ht-images{{ h }}">
+                        <img src="{{ image.image.url }}" width="100" height="100" class="py-2 me-4">
+                    </a>
+                    {% endfor %}
                 </div>
+            </div>
+            <p>Надіслано: {{ hw.send_date | date:'d.m.Y' }}</p>
+        </div>
+        <hr>
+        {% if mark %}
+        <!--Mark-->
+        <div class="row">
+            <h2 class="fw ">Оцінка</h2>
+            <br>
+            <p>{{ mark.mark }}</p>
+            <p>{{ mark.comment }}</p>
+        </div>
+        {% endif %}
         {% endif %}
     </main>
 </div>

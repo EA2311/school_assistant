@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 
 from accounts.decorators import teacher_required
 from accounts.models import Teacher, Student
-from student.models import StudentWork
+from student.models import StudentWork, ImagesSW
 from teacher.forms import ClassroomCreateForm, SubjectCreateForm, HomeworkCreateForm
 from teacher.models import Classroom, Subject, HomeTask, ImagesHT, Mark
 
@@ -40,14 +40,14 @@ class CreateClassroomsView(CreateView):
     form_class = ClassroomCreateForm
 
     def form_valid(self, form):
-        self.object = form.save(commit=False)
+        instance = form.save(commit=False)
         teacher = Teacher.objects.get(user=self.request.user)
-        key = random.randint(100000000000, 999999999000)
-        # while Classroom.objects.get(key=key):
-            # key = random.randint(100000000000, 999999999000) get_object_or_404 !!!!!!!!!!!!!
-        self.object.key = key
-        self.object.teacher = teacher
-        self.object.save()
+        key = random.randint(100000000000, 999999999999)
+        while Classroom.objects.filter(key=key).exists():
+            key = random.randint(100000000000, 999999999999)
+        instance.key = key
+        instance.teacher = teacher
+        instance.save()
         return redirect('teacher:classrooms')
 
 
@@ -196,6 +196,22 @@ class HomeTaskDeleteView(DeleteView):
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
+class HomeTaskUpdateView(UpdateView):
+    model = HomeTask
+    fields = ['task']
+    template_name = 'teacher/home_task_update.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cpk'] = self.kwargs['cpk']
+        context['subj'] = self.kwargs['subj']
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy('teacher:home_tasks', kwargs={'pk': self.kwargs['cpk'], 'subj': self.kwargs['subj']})
+
+
+@method_decorator([login_required, teacher_required], name='dispatch')
 class StudentWorksView(ListView):
     template_name = 'teacher/home_works.html'
     context_object_name = 'home_works'
@@ -212,6 +228,9 @@ class StudentWorksView(ListView):
 
         images = ImagesHT.objects.filter(home_task__subject__classroom__id=self.kwargs['pk'])
         context['images'] = images
+
+        images_sw = ImagesSW.objects.filter(work__student__user__id=student.user.id)
+        context['images_sw'] = images_sw
 
         marks = Mark.objects.filter(homework__student=student)
         context['marks'] = marks

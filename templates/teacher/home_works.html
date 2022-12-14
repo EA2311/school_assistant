@@ -20,18 +20,22 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{% url 'teacher:subjects' pk %}" class="nav-link active">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                             class="bi bi-chevron-right" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
-                        </svg>
+                    <a href="{% url 'teacher:subjects' pk %}" class="nav-link link-dark">
                         Предмети
                     </a>
                 </li>
 
                 <hr>
-
+                    <li>
+                    <a href="#" class="nav-link active">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-chevron-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                        Виконані роботи
+                    </a>
+                </li>
             </ul>
         </div>
     </nav>
@@ -69,21 +73,33 @@
                                                 {% if image.home_task.id == h.home_task.id %}
                                                 <a href="{{ image.image.url }}" class="col-sm-2"
                                                    data-lightbox="ht-images{{ h }}">
-                                                    <img src="{{ image.image.url }}" width="100" height="100" class="me-4">
+                                                    <img src="{{ image.image.url }}" width="50" height="50" class="py-1 me-2">
                                                 </a>
                                                 {% endif %}
                                                 {% endfor %}
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="col align-self-start bg-light">
                                     <h5>Домашня робота</h5>
 
                                     <p>{{ h.text }}</p>
-                                    {% if h.image %}
-                                    <image src="{{ h.image.url }}" width="300" height="180"/>
-                                    {% endif %}
+                                    <div class="row">
+                                        <div class="col-md">
+                                                {% for image in images_sw %}
+                                                {% if image.work.home_task.id == h.home_task.id %}
+                                                <a href="{{ image.image.url }}" class="col-sm"
+                                                   data-lightbox="hw-images{{ h.id }}">
+                                                    <img src="{{ image.image.url }}" width="50" height="50" class="py-1 me-2">
+                                                </a>
+                                                {% endif %}
+                                                {% endfor %}
+                                        </div>
                                 </div>
+                                    <br>
+                                </div>
+
                                 <div class="col align-self-start">
                                     <h5>Оцінка</h5>
                                     {% if not h.is_checked %}
@@ -92,7 +108,7 @@
                                         <input type="text" class="form-control" name="mark_" maxlength="20" required id="id_mark">
                                         <br>
                                         <h5>Коментар</h5>
-                                        <input type="text" class="form-control" name="comment_" maxlength="100" required id="id_comment">
+                                        <textarea type="text" class="form-control" name="comment_" maxlength="100" id="id_comment"></textarea>
                                         <br>
                                         <button class="btn btn-primary" type="submit" name="submit" value="{{ h.id }}">Зберегти</button>
                                     </form>

@@ -2,7 +2,7 @@ from django.urls import path
 
 from teacher.views import ClassroomsView, CreateClassroomsView, DetailClassroomView, SubjectsView, CreateSubjectView, \
     HomeTasksView, CreateHomeTaskView, StudentWorksView, ClassroomDeleteView, ClassroomUpdateView, SubjectUpdateView, \
-    SubjectDeleteView, HomeTaskDeleteView
+    SubjectDeleteView, HomeTaskDeleteView, HomeTaskUpdateView
 
 app_name = 'teacher'
 
@@ -24,5 +24,6 @@ urlpatterns = [
     path('classroom/<int:pk>/subjects/<int:subj>/home_tasks/', HomeTasksView.as_view(), name='home_tasks'),
     path('classroom/<int:pk>/subjects/<int:subj>/home_tasks/new/', CreateHomeTaskView.as_view(), name='create_home_tasks'),
     path('classroom/<int:cpk>/subjects/<int:subj>/home_tasks/<int:pk>/delete/', HomeTaskDeleteView.as_view(), name='delete_home_task'),
+    path('classroom/<int:cpk>/subjects/<int:subj>/home_tasks/<int:pk>/update/', HomeTaskUpdateView.as_view(), name='update_home_task'),
 
 ]

@@ -4,18 +4,60 @@
 Реєстрація
 {% endblock %}
 
-
 {% block content %}
-
 {% load crispy_forms_tags %}
-
 <div class="container py-5">
-	<h1>Register</h1>
-	<form method="POST">
-		{% csrf_token %}
-		{{ form | crispy }}
-		<button class="btn btn-primary" type="submit">Register</button>
-	</form>
-	<p class="text-center">If you already have an account, <a href="{% url 'accounts:home' %}">login</a> instead.</p>
+    <h1 class="text-center pb-5">Реєстрація</h1>
+
+    <form class="row g-3 bg-light" method="POST">
+        {% csrf_token %}
+        <div class="col-md-6">
+            <label for="id_email" class="form-label requiredField">Електронна адреса<span class="asteriskField">*</span></label>
+            <input type="email" name="email" maxlength="254" autofocus class="emailinput form-control" required
+                   id="id_email">
+        </div>
+        <div class="col-md-6">
+            <label for="id_phone_number" class="form-label requiredField">Номер телефону<span
+                    class="asteriskField">*</span> </label>
+            <input type="text" name="phone_number" maxlength="13" class="form-control" required id="id_phone_number">
+        </div>
+        <div class="col-md-4">
+            <label for="id_last_name" class="form-label requiredField">Прізвище<span class="asteriskField">*</span>
+            </label>
+            <input type="text" name="last_name" maxlength="30" class="form-control" required id="id_last_name"
+                   placeholder="Прізвище">
+        </div>
+        <div class="col-4">
+            <label for="id_first_name" class="form-label requiredField">Ім'я<span class="asteriskField">*</span>
+            </label>
+            <input type="text" name="first_name" maxlength="30" class="form-control" required id="id_first_name"
+                   placeholder="Ім'я">
+        </div>
+        <div class="col-4">
+            <label for="id_patronymic" class="form-label requiredField">По-батькові<span class="asteriskField">*</span>
+            </label>
+            <input type="text" name="patronymic" maxlength="30" class="form-control" required id="id_patronymic"
+                   placeholder="По-батькові">
+        </div>
+        <div class="col-md-6">
+            <label for="id_password1" class="form-label requiredField">Пароль<span class="asteriskField">*</span>
+            </label>
+            <input type="password" name="password1" autocomplete="new-password" class="form-control" required
+                   id="id_password1">
+        </div>
+        <div class="col-md-6">
+            <label for="id_password2" class="form-label requiredField">Повторіть пароль<span
+                    class="asteriskField">*</span> </label>
+            <input type="password" name="password2" autocomplete="new-password" class="form-control" required
+                   id="id_password2">
+        </div>
+        <div class="col-5"></div>
+        <div class="col-4">
+            <button type="submit" class="btn btn-primary mt-5">Створити акаунт</button>
+        </div>
+        <div class="col-5"></div>
+        <p class="text-center">Якщо ви вже маєте акаунт, можете <a href="{% url 'accounts:home' %}">увійти</a> в систему.
+        </p>
+    </form>
 </div>
 {% endblock %}

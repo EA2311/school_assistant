@@ -49,7 +49,7 @@ class HomeTask(models.Model):
 
 def ht_file_name(instance, filename):
     ext = filename.split('.')[-1]
-    filename = f"teacher_{instance.home_task.subject.classroom.teacher.user.id}/{instance.home_task.subject.subject_name}/{instance.home_task[:10]}.{ext}"
+    filename = f"teacher_{instance.home_task.subject.classroom.teacher.user.id}/{instance.home_task.subject.subject_name}/{instance.home_task.pub_date}.{ext}"
     return filename
 
 
