@@ -10,7 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from accounts.decorators import student_required
 from accounts.models import Student
 from teacher.models import Classroom, Subject, HomeTask, Mark, ImagesHT
-from student.models import StudentWork
+from student.models import StudentWork, ImagesSW
 
 
 @method_decorator([login_required, student_required], name='dispatch')
@@ -69,8 +69,13 @@ class StudentDetailHomeworkView(DetailView):
     def post(self, request, subj, pk):
         student = Student.objects.get(user=request.user)
         ht = HomeTask.objects.get(id=pk)
-        print(request.FILES.get('hw_image'), '--------------')
-        StudentWork.objects.create(home_task=ht, text=request.POST.get('hw_text'), image=request.FILES.get('hw_image'), student=student)
+        sw = StudentWork.objects.create(home_task=ht, text=request.POST.get('hw_text'), student=student)
+
+        images = self.request.FILES.getlist('hw_images')
+        if images:
+            for image in images:
+                ImagesSW.objects.create(image=image, work=sw)
+
         return HttpResponseRedirect(reverse('student:detail_home_tasks', args=(subj, pk,)))
 
     def get_context_data(self, **kwargs):
@@ -94,4 +99,10 @@ class StudentDetailHomeworkView(DetailView):
             context['images'] = images
         except ObjectDoesNotExist:
             pass
+        try:
+            images = ImagesSW.objects.filter(work=StudentWork.objects.get(home_task=ht, student__user=self.request.user))
+            context['images_sw'] = images
+        except ObjectDoesNotExist:
+            pass
+
         return context
