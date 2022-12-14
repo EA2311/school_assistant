@@ -30,8 +30,8 @@ class ClassroomDeleteView(DeleteView):
     success_url = reverse_lazy('teacher:classrooms')
     model = Classroom
 
-    def get(self, *a, **kw):
-        return self.delete(*a, **kw)
+    def get(self, *a, **kwargs):
+        return self.delete(*a, **kwargs)
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
@@ -42,7 +42,10 @@ class CreateClassroomsView(CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         teacher = Teacher.objects.get(user=self.request.user)
-        self.object.key = random.randint(100000000000, 999999999000)
+        key = random.randint(100000000000, 999999999000)
+        # while Classroom.objects.get(key=key):
+            # key = random.randint(100000000000, 999999999000) get_object_or_404 !!!!!!!!!!!!!
+        self.object.key = key
         self.object.teacher = teacher
         self.object.save()
         return redirect('teacher:classrooms')
@@ -182,6 +185,17 @@ class CreateHomeTaskView(CreateView):
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
+class HomeTaskDeleteView(DeleteView):
+    model = HomeTask
+
+    def get(self, *a, **kwargs):
+        return self.delete(kwargs['pk'])
+
+    def get_success_url(self):
+        return reverse_lazy('teacher:home_tasks', kwargs={'pk': self.kwargs['cpk'], 'subj': self.kwargs['subj']})
+
+
+@method_decorator([login_required, teacher_required], name='dispatch')
 class StudentWorksView(ListView):
     template_name = 'teacher/home_works.html'
     context_object_name = 'home_works'
@@ -205,8 +219,9 @@ class StudentWorksView(ListView):
         return context
 
     def post(self, request, *args, **kwargs):
-        mark = request.POST.get('mark')
-        comment = request.POST.get('comment')
+        mark = request.POST.get('mark_')
+        comment = request.POST.get('comment_')
+        print(mark, comment)
         teacher = Teacher.objects.get(user=request.user)
         hw = StudentWork.objects.get(id=request.POST.get('submit'))
 

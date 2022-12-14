@@ -9,33 +9,77 @@
 {% endblock %}
 
 {% block content %}
+<div class="row">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse d-flex" style="height:100vh">
+        <div class="position-sticky pt-2 sidebar-sticky">
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
 
-<h1>Завдання</h1>
-<p>{{ home_task.task }}</p>
-<p>{{ home_task.pub_date }}</p>
-<hr>
-{% if not hw %}
-<form method="post" enctype="multipart/form-data">
-{% csrf_token %}
-<fieldset>
-    <legend><h1>Моя робота</h1></legend>
-    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-    <label for="hw_text">Введіть текст</label><br>
-    <input type="text" name="hw_text" id="hw_text"><br>
-    <br>
-        <input type="file" name="hw_image" id="hw_image" accept="image/*">
-</fieldset>
-    <br>
-		<button class="btn btn-primary" type="submit">Надіслати</button>
-</form>
-{% endif %}
-<p>{{ hw.text }}</p>
-<p>{{ hw.home_task }}</p>
-<p>{{ hw.send_date }}</p>
-{% if mark %}
-<hr>
-<p>{{ mark.mark }}</p>
-<p>{{ mark.comment }}</p>
-{% endif %}
+                    <a href="{% url 'student:home_works' home_task.subject.id %}" class="nav-link active bg-success"
+                       aria-current="page">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-backspace-fill" viewBox="0 0 16 16">
+                            <path d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2V3zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8 5.829 5.854z"/>
+                        </svg>
+                        Назад
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="row">
+        <h2 class="fw  py-2">Завдання </h2>                <br>
+
+        <textarea disabled readonly rows="6">{{ home_task.task }}</textarea>
+            {% for image in images %}
+            <a href="{{ image.image.url }}" class="px-2 py-2" data-lightbox="ht-images">
+                <img src="{{ image.image.url }}" >
+            </a>
+            {% endfor %}
+            <p>Задано: {{ home_task.pub_date | date:'d.m.Y'}}</p>
+            </div>
+        <hr>
+        <br>
+        {% if not hw %}
+                <div class="row">
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <fieldset>
+                <legend><h2 class="fw ">Моя робота</h2></legend>                <br>
+
+                {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+                <h4 class="fw-light">Введіть текст:</h4>
+                <textarea class="form-control" type="text" name="hw_text" id="hw_text" rows="3"></textarea><br>
+                <br>
+                <div class="form-group files">
+                           <h4 class="fw-light">Виберіть фото:</h4>
+                    <input type="file" name="hw_image" id="hw_image" accept="image/*">
+                        </div>
+            </fieldset>
+            <br>
+            <button class="btn btn-success" type="submit">Надіслати</button>
+        </form>
+
+                                </div><br>
+        {% else %}
+
+                <div class="row">
+                <h2 class="fw ">Моя робота</h2>
+                    <br>
+
+        <textarea disabled readonly>{{ hw.text }}</textarea>
+        <p>Надіслано: {{ hw.send_date | date:'d.m.Y' }}</p>
+
+        {% if mark %}
+        <hr>
+        <p>{{ mark.mark }}</p>
+        <p>{{ mark.comment }}</p>
+        {% endif %}
+                </div>
+        {% endif %}
+    </main>
+</div>
 {% endblock %}

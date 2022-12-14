@@ -15,6 +15,13 @@
     <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse d-flex" style="height:100vh">
         <div class="position-sticky pt-2 sidebar-sticky">
             <ul class="nav nav-pills flex-column mb-auto">
+                <li>
+                    <a href="{% url 'student:student_classrooms' %}" class="nav-link link-dark">
+
+                        Усі предмети
+                    </a>
+                </li>
+                <hr>
                 {% for s in subjects %}
                 {% if s == subject %}
                 <li>
@@ -41,34 +48,34 @@
     </nav>
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-    <div class="row py-lg-3">
-      <div class="col-lg-10 col-md-8 mx-auto">
-          <h1 class="fw-light text-center">Домашні завдання </h1>
-          <ul class="list-group py-3">
-               {% if not home_tasks %}
-    <h4 class="text-center">
-        Домашні завдання поки що відсутні
-    </h4>
- {% endif %}
-              {% for h in home_tasks %}
-              <a href="{% url 'student:detail_home_tasks' subject.id h.id %}"
-                 class="list-group-item list-group-item-action">
-                 ДЗ | {{ subject.subject_name }} - {{ h.task }} | {{ h.pub_date | date:'d.m.Y' }}
-                                {% for hw in hws %}
-                                {% if hw.mark and hw.home_task == h %}
-                                <span class="mx-3  badge bg-success">Оцінено</span>
-                                {% elif  hw.home_task == h and not hw.mark %}
-                                <span class="mx-3  badge bg-warning">Сдано</span>
+        <div class="row py-lg-3">
+            <div class="col-lg-10 col-md-8 mx-auto">
+                <h1 class="fw-light text-center">Домашні завдання </h1>
+                <ul class="list-group py-3">
+                    {% if not home_tasks %}
+                    <h4 class="text-center">
+                        Домашні завдання поки що відсутні
+                    </h4>
+                    {% endif %}
+                    {% for h in home_tasks %}
+                    <a href="{% url 'student:detail_home_tasks' subject.id h.id %}"
+                       class="list-group-item list-group-item-action">
+                        ДЗ | {{ subject.subject_name }} - {{ h.task }} | {{ h.pub_date | date:'d.m.Y' }}
 
-                                {% endif %}
-                                      {% endfor %}
+                        {% for hw in hws %}
+                        {% if hw.mark and hw.home_task == h %}
+                        <span class="mx-3  badge bg-success">Оцінено</span>
+                        {% elif hw.home_task == h and not hw.mark %}
+                        <span class="mx-3  badge bg-warning">Сдано</span>
+                        {% endif %}
+                        {% endfor %}
 
-              </a>
-              {% endfor %}
-          </ul>
-      </div>
-    </div>
- </main>
+                    </a>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </main>
 </div>
 
 {% endblock %}

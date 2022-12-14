@@ -10,14 +10,13 @@
 
 {% block content %}
 
-{% if not classrooms %}
+<div class="row row-cols-1 row-cols-md-4 g-4 px-4">
+    <br>
+    {% if not classrooms %}
 <h4>
     Classrooms doesn't exist
 </h4>
 {% endif %}
-
-<div class="row row-cols-1 row-cols-md-4 g-4 px-4">
-    <br>
     {% for c in classrooms %}
     <div class="col">
         <div class="card cards card-2 text-center">

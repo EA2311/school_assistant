@@ -23,11 +23,6 @@
                         Предмети
                     </a>
                 </li>
-                <li>
-                    <a href="#" class="nav-link link-dark">
-                        Розклад
-                    </a>
-                </li>
 
                 <hr>
                 <li>
@@ -69,18 +64,18 @@
                 </h2>
                 <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse "
                      aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
+                    <div class="accordion-body bg-light">
                         <p>{{ h.task }}</p>
                         <div class="row">
                             <div class="col-md-8">
                                 <div class="row">
+
                                     {% for image in images %}
 
                                     {% if image.home_task == h %}
-                                    <a href="{{ image.image.url }}" class="col-sm-3" data-lightbox="ht-images{{ h }}">
-                                        <img src="{{ image.image.url }}" width="100" height="100">
+                                    <a href="{{ image.image.url }}" class="col-sm-3 px-1 py-1" data-lightbox="ht-images{{ h }}">
+                                        <img src="{{ image.image.url }}" width="140" height="70">
                                     </a>
-
                                     {% endif %}
                                     {% endfor %}
                                 </div>
@@ -91,13 +86,37 @@
 
                             <div class="col justify-content-center">
                                 <a class="btn btn-primary">Редагувати</a>
-                                <a class="btn btn-danger">Видалити</a></div>
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal{{ h.id }}">Видалити
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {% endfor %}
+
+            <!-- Modal -->
+    <div class="modal fade" id="exampleModal{{ h.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ви дійсно бажаєте видалити завдання "{{ h.task }}"?</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Усі дані про це завдання та виконані роботи за ним буде остаточно видалено без можливості
+                    відновлення!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Відмінити</button>
+                    <a href="{% url 'teacher:delete_home_task' pk subject.id h.id %}" type="button"
+                       class="btn btn-danger">Видалити</a>
+                </div>
+            </div>
+        </div>
+    </div>
+            </div>
+                {% endfor %}
         </div>
 
     </main>

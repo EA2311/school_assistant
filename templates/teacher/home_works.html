@@ -29,11 +29,6 @@
                         Предмети
                     </a>
                 </li>
-                <li>
-                    <a href="#" class="nav-link link-dark">
-                        Розклад
-                    </a>
-                </li>
 
                 <hr>
 
@@ -94,17 +89,19 @@
                                     {% if not h.is_checked %}
                                     <form method="POST" enctype="multipart/form-data">
                                         {% csrf_token %}
-                                        <input type="text" class="form-control" name="mark" maxlength="20" required id="id_mark">
+                                        <input type="text" class="form-control" name="mark_" maxlength="20" required id="id_mark">
                                         <br>
                                         <h5>Коментар</h5>
-                                        <input type="text" class="form-control" name="comment" maxlength="100" required id="id_comment">
+                                        <input type="text" class="form-control" name="comment_" maxlength="100" required id="id_comment">
                                         <br>
                                         <button class="btn btn-primary" type="submit" name="submit" value="{{ h.id }}">Зберегти</button>
                                     </form>
                                     {% else %}
                                     {% for m in marks %}
+                                    {% if m.homework == h %}
                                         {{ m.mark }}
                                         {{ m.comment }}
+                                    {% endif %}
                                     {% endfor %}
                                     {% endif %}
                                 </div>

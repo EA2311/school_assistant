@@ -9,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from accounts.decorators import student_required
 from accounts.models import Student
-from teacher.models import Classroom, Subject, HomeTask, Mark
+from teacher.models import Classroom, Subject, HomeTask, Mark, ImagesHT
 from student.models import StudentWork
 
 
@@ -77,15 +77,21 @@ class StudentDetailHomeworkView(DetailView):
         context = super().get_context_data(**kwargs)
         student = Student.objects.get(user=self.request.user)
         context['student'] = student
+        ht = self.kwargs['pk']
         try:
-            hw = StudentWork.objects.get(home_task=self.kwargs['pk'], student__user=self.request.user)
+            hw = StudentWork.objects.get(home_task=ht, student__user=self.request.user)
             context['hw'] = hw
         except ObjectDoesNotExist:
             pass
         try:
-            hw = StudentWork.objects.get(home_task=self.kwargs['pk'], student__user=self.request.user)
+            hw = StudentWork.objects.get(home_task=ht, student__user=self.request.user)
             mark = Mark.objects.get(homework=hw)
             context['mark'] = mark
+        except ObjectDoesNotExist:
+            pass
+        try:
+            images = ImagesHT.objects.filter(home_task=ht)
+            context['images'] = images
         except ObjectDoesNotExist:
             pass
         return context
