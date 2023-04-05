@@ -13,11 +13,10 @@
     <form class="row g-3" method="post">
         {% csrf_token %}
         <div class="col-auto">
-            <label for="key" class="">Код класу: </label>
-            <input type="text" class="form-control-plaintext" name="key" id="key">
-        </div>
-        <div class="col-auto">
-            <button type="submit" class="btn btn-primary mb-3">Увійти</button>
+            <label for="key">Код класу: </label>
+            <input type="text" class="form-control" name="key" id="key">
+            <br>
+                        <button type="submit" class="btn btn-primary mb-3">Увійти</button>
         </div>
     </form>
     {% else %}
