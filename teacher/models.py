@@ -30,7 +30,7 @@ class Subject(models.Model):
     subject_name = models.CharField(max_length=50)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
 
-    image = models.ImageField(upload_to=subject_file_name, default='placeholder-image.png')
+    image = models.ImageField(upload_to=subject_file_name, default='placeholder_image.webp')
 
     def __str__(self):
         return self.subject_name

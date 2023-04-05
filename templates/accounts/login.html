@@ -7,11 +7,12 @@
 
 {% block content %}
 {% load crispy_forms_tags %}
+{% load static %}
  <form method="POST">
        {% csrf_token %}
 
 <div class="px-4 py-5 my-5 text-center">
-    <img class="d-block mx-auto mb-4" src="/media/Wavy_Edu-05_Single-08.jpg" width="60" height="60">
+    <img class="d-block mx-auto mb-4" src="{% static 'images/homepage_image.jpg'%}" width="60" height="60">
     <h1 class="display-5 fw-bold">Вхід у систему</h1>
 
     <div class="col-lg-3 mx-auto">
