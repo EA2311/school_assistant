@@ -12,14 +12,13 @@
        {% csrf_token %}
 
 <div class="px-4 py-5 my-5 text-center">
-    <img class="d-block mx-auto mb-4" src="{% static 'images/homepage_image.jpg'%}" width="60" height="60">
+    <img class="d-block mx-auto mb-4" src="{% static 'accounts/images/homepage_image.jpg'%}" width="60" height="60">
     <h1 class="display-5 fw-bold">Вхід у систему</h1>
 
     <div class="col-lg-3 mx-auto">
-                              <hr>
-
+        <hr>
       {{ login_form|crispy }}
-                      <hr>
+        <hr>
 
       <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
         <button class="btn btn-primary btn-lg px-4" type="submit" >Увійти</button>
