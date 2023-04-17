@@ -88,15 +88,12 @@ class SubjectsView(ListView):
     context_object_name = 'subjects'
 
     def get_queryset(self):
-        classroom = Classroom.objects.get(id=self.kwargs['pk'])
-        subjects = Subject.objects.filter(classroom=classroom)
-        return subjects
+        return Subject.objects.filter(classroom__id=self.kwargs['pk'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['pk'] = self.kwargs['pk']
-        classroom = Classroom.objects.get(id=self.kwargs['pk'])
-        context['classroom'] = classroom
+        context['classroom'] = Classroom.objects.get(id=self.kwargs['pk'])
         return context
 
 

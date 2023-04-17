@@ -22,8 +22,10 @@ urlpatterns = [
     path('classroom/<int:cpk>/subjects/<int:pk>/update/', SubjectUpdateView.as_view(), name='update_subject'),
 
     path('classroom/<int:pk>/subjects/<int:subj>/home_tasks/', HomeTasksView.as_view(), name='home_tasks'),
-    path('classroom/<int:pk>/subjects/<int:subj>/home_tasks/new/', CreateHomeTaskView.as_view(), name='create_home_tasks'),
-    path('classroom/<int:cpk>/subjects/<int:subj>/home_tasks/<int:pk>/delete/', HomeTaskDeleteView.as_view(), name='delete_home_task'),
-    path('classroom/<int:cpk>/subjects/<int:subj>/home_tasks/<int:pk>/update/', HomeTaskUpdateView.as_view(), name='update_home_task'),
-
+    path('classroom/<int:pk>/subjects/<int:subj>/home_tasks/new/',
+         CreateHomeTaskView.as_view(), name='create_home_tasks'),
+    path('classroom/<int:cpk>/subjects/<int:subj>/home_tasks/<int:pk>/delete/',
+         HomeTaskDeleteView.as_view(), name='delete_home_task'),
+    path('classroom/<int:cpk>/subjects/<int:subj>/home_tasks/<int:pk>/update/',
+         HomeTaskUpdateView.as_view(), name='update_home_task'),
 ]
