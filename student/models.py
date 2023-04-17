@@ -19,7 +19,8 @@ class StudentWork(models.Model):
 
 def sw_file_name(instance, filename):
     ext = filename.split('.')[-1]
-    filename = f"homework_images/student_{instance.work.student.user.id}/{instance.work.home_task.subject.subject_name}/{instance.work.send_date}.{ext}"
+    filename = f"homework_images/student_{instance.work.student.user.id}/{instance.work.home_task.subject.subject_name}\
+    /{instance.work.send_date}.{ext} "
     return filename
 
 

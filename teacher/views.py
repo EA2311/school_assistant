@@ -67,11 +67,17 @@ class DetailClassroomView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        classroom = Classroom.objects.get(id=self.kwargs['pk'])
-        context['pk'] = self.kwargs['pk']
-        students = Student.objects.filter(classroom=classroom).order_by('user__last_name')
+
+        # Get queryset of students who are in the current classroom
+        students = Student.objects.select_related('user').filter(classroom=self.object).order_by('user__last_name')
+
+        # Count unchecked homeworks of every student
         unchecked = Count('studentwork', filter=Q(studentwork__is_checked=False))
+
+        # Annotate students queryset with unchecked works
         students = students.annotate(unchecked=unchecked)
+
+        context['pk'] = self.kwargs['pk']
         context['students'] = students
         return context
 

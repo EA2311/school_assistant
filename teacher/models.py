@@ -12,9 +12,9 @@ def classroom_file_name(instance, filename):
 class Classroom(models.Model):
     class_name = models.CharField(blank=False, max_length=20)
     key = models.CharField(blank=False, max_length=50)
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
-
     image = models.ImageField(upload_to=classroom_file_name)
+
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.class_name
