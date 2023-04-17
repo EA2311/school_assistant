@@ -225,22 +225,28 @@ class StudentWorksView(ListView):
     context_object_name = 'home_works'
 
     def get_queryset(self):
-        home_works = StudentWork.objects.filter(student=self.kwargs['student_id']).order_by('-send_date')
-        return home_works
+        """
+        Return queryset of StudentWork objects which belong to current student and ordered by send date with related
+        HomeTask, Subject, Student and User objects.
+        """
+        return StudentWork.objects.select_related('home_task__subject', 'student__user').\
+            filter(student=self.kwargs['student_id']).order_by('-send_date')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['pk'] = self.kwargs['pk']
-        student = Student.objects.get(user__id=self.kwargs['student_id'])
-        context['st'] = student
 
-        images = ImagesHT.objects.filter(home_task__subject__classroom__id=self.kwargs['pk'])
-        context['images'] = images
+        student = Student.objects.select_related('user').get(user=self.kwargs['student_id'])
 
-        images_sw = ImagesSW.objects.filter(work__student__user__id=student.user.id)
-        context['images_sw'] = images_sw
+        images = ImagesHT.objects.select_related('home_task').filter(home_task__subject__classroom=self.kwargs['pk'])
+
+        images_sw = ImagesSW.objects.filter(work__student__user=student.user.id)
 
         marks = Mark.objects.filter(homework__student=student)
+
+        context['pk'] = self.kwargs['pk']
+        context['st'] = student
+        context['images'] = images
+        context['images_sw'] = images_sw
         context['marks'] = marks
 
         return context
