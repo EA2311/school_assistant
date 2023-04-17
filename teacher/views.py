@@ -147,17 +147,22 @@ class HomeTasksView(ListView):
     context_object_name = 'home_tasks'
 
     def get_queryset(self):
-        subject = Subject.objects.get(id=self.kwargs['subj'])
-        home_tasks = HomeTask.objects.filter(subject=subject).order_by('-pub_date')
-        return home_tasks
+        """
+        Return queryset of HomeTask objects which belong to current subject and ordered by publishing date.
+        """
+        return HomeTask.objects.filter(subject__id=self.kwargs['subj']).order_by('-pub_date')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['pk'] = self.kwargs['pk']
+
+        # Get current Subject object
         subject = Subject.objects.get(id=self.kwargs['subj'])
+
+        context['pk'] = self.kwargs['pk']
         context['subject'] = subject
-        images = ImagesHT.objects.filter(home_task__subject=subject)
-        context['images'] = images
+
+        # Get queryset of ImagesHT objects which belong to current subject and related HomeTask objects
+        context['images'] = ImagesHT.objects.select_related('home_task').filter(home_task__subject=subject)
         return context
 
 
