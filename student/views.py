@@ -75,6 +75,26 @@ class StudentDetailHomeworkView(DetailView):
     template_name = 'student/detail_home_tasks.html'
     context_object_name = 'home_task'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        student = Student.objects.get(user=self.request.user)
+
+        home_task_id = self.kwargs['pk']
+
+        student_work = StudentWork.objects.get_or_none(home_task=home_task_id, student__user=self.request.user)
+        mark = Mark.objects.get_or_none(homework=student_work)
+        images_ht = ImagesHT.objects.filter_or_none(home_task=home_task_id)
+        images_sw = ImagesSW.objects.filter_or_none(work=student_work)
+
+        context['student'] = student
+        context['hw'] = student_work
+        context['mark'] = mark
+        context['images'] = images_ht
+        context['images_sw'] = images_sw
+
+        return context
+
     def post(self, request, subj, pk):
         student = Student.objects.get(user=request.user)
         ht = HomeTask.objects.get(id=pk)
@@ -86,33 +106,3 @@ class StudentDetailHomeworkView(DetailView):
                 ImagesSW.objects.create(image=image, work=sw)
 
         return HttpResponseRedirect(reverse('student:detail_home_tasks', args=(subj, pk,)))
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        student = Student.objects.get(user=self.request.user)
-        context['student'] = student
-        ht = self.kwargs['pk']
-        try:
-            hw = StudentWork.objects.get(home_task=ht, student__user=self.request.user)
-            context['hw'] = hw
-        except ObjectDoesNotExist:
-            pass
-        try:
-            hw = StudentWork.objects.get(home_task=ht, student__user=self.request.user)
-            mark = Mark.objects.get(homework=hw)
-            context['mark'] = mark
-        except ObjectDoesNotExist:
-            pass
-        try:
-            images = ImagesHT.objects.filter(home_task=ht)
-            context['images'] = images
-        except ObjectDoesNotExist:
-            pass
-        try:
-            images = ImagesSW.objects.filter(
-                work=StudentWork.objects.get(home_task=ht, student__user=self.request.user))
-            context['images_sw'] = images
-        except ObjectDoesNotExist:
-            pass
-
-        return context

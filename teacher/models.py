@@ -1,6 +1,7 @@
 from django.db import models
 
 from accounts.models import Teacher
+from managers import NoneManager
 
 
 def classroom_file_name(instance, filename):
@@ -52,6 +53,8 @@ def ht_file_name(instance, filename):
 
 
 class ImagesHT(models.Model):
+    objects = NoneManager()
+
     image = models.ImageField(upload_to=ht_file_name, null=False, blank=False)
     home_task = models.ForeignKey(HomeTask, on_delete=models.CASCADE, null=False)
 
@@ -60,6 +63,8 @@ class ImagesHT(models.Model):
 
 
 class Mark(models.Model):
+    objects = NoneManager()
+
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     homework = models.OneToOneField('student.StudentWork', on_delete=models.CASCADE)
 
