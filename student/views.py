@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -39,24 +39,33 @@ class StudentHomeworksView(ListView):
     context_object_name = 'home_tasks'
 
     def get_queryset(self):
-        subject = Subject.objects.get(id=self.kwargs['subj'])
-        home_tasks = HomeTask.objects.filter(subject=subject).order_by('-pub_date')
-        return home_tasks
+        """
+        Return queryset of HomeTask objects which belong to current subject and ordered by publishing date with related
+        HomeTask, Subject, Student and User objects.
+        """
+        return get_list_or_404(
+            HomeTask.objects.select_related('subject').order_by('-pub_date'),subject=self.kwargs['subj']
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         subject = Subject.objects.get(id=self.kwargs['subj'])
-        context['subject'] = subject
         student = Student.objects.get(user=self.request.user)
-        context['student'] = student
         subjects = Subject.objects.filter(classroom=student.classroom)
-        context["subjects"] = subjects
+
+        # If student's work for this subject exists, get queryset of StudentWork with related HomeTask and Mark objects
         try:
-            hw = StudentWork.objects.filter(home_task__subject=subject, student__user=self.request.user)
-            context['hws'] = hw
+            hw = StudentWork.objects.select_related('home_task', 'mark').filter(
+                home_task__subject=subject, student__user=self.request.user)
         except ObjectDoesNotExist:
             pass
+        else:
+            context['hws'] = hw
 
+        context['subject'] = subject
+        context['student'] = student
+        context["subjects"] = subjects
         return context
 
 
@@ -100,7 +109,8 @@ class StudentDetailHomeworkView(DetailView):
         except ObjectDoesNotExist:
             pass
         try:
-            images = ImagesSW.objects.filter(work=StudentWork.objects.get(home_task=ht, student__user=self.request.user))
+            images = ImagesSW.objects.filter(
+                work=StudentWork.objects.get(home_task=ht, student__user=self.request.user))
             context['images_sw'] = images
         except ObjectDoesNotExist:
             pass
