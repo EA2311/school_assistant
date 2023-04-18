@@ -239,9 +239,9 @@ class StudentWorksView(ListView):
 
         images = ImagesHT.objects.select_related('home_task').filter(home_task__subject__classroom=self.kwargs['pk'])
 
-        images_sw = ImagesSW.objects.filter(work__student__user=student.user.id)
+        images_sw = ImagesSW.objects.select_related('work__home_task').filter(work__student__user=student.user.id)
 
-        marks = Mark.objects.filter(homework__student=student)
+        marks = Mark.objects.select_related('homework').filter(homework__student=student)
 
         context['pk'] = self.kwargs['pk']
         context['st'] = student
