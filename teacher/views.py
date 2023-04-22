@@ -1,5 +1,3 @@
-import random
-
 from django.db.models import Count, Q
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -42,10 +40,6 @@ class CreateClassroomsView(CreateView):
     def form_valid(self, form):
         instance = form.save(commit=False)
         teacher = Teacher.objects.get(user=self.request.user)
-        key = random.randint(100000000000, 999999999999)
-        while Classroom.objects.filter(key=key).exists():
-            key = random.randint(100000000000, 999999999999)
-        instance.key = key
         instance.teacher = teacher
         instance.save()
         return redirect('teacher:classrooms')

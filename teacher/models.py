@@ -1,7 +1,18 @@
+import random
+import string
+
 from django.db import models
 
 from accounts.models import Teacher
 from managers import NoneManager
+
+
+def get_random_string():
+    """
+    Return a unique string of a random sequence of lower and uppercase characters and digits 40 characters long.
+    """
+    symbols = string.ascii_letters + string.digits
+    return ''.join(random.choice(symbols) for i in range(40))
 
 
 def classroom_file_name(instance, filename):
@@ -12,7 +23,7 @@ def classroom_file_name(instance, filename):
 
 class Classroom(models.Model):
     class_name = models.CharField(blank=False, max_length=20)
-    key = models.CharField(blank=False, max_length=50)
+    key = models.CharField(blank=False, max_length=50, unique=True, default=get_random_string)
     image = models.ImageField(upload_to=classroom_file_name)
 
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
