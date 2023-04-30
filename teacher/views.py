@@ -10,7 +10,7 @@ from accounts.models import Teacher, Student
 from student.models import StudentWork, ImagesSW
 from teacher.forms import ClassroomCreateForm, SubjectCreateForm, HomeworkCreateForm
 from teacher.models import Classroom, Subject, HomeTask, ImagesHT, Mark
-from teacher.services import get_current_teacher_classrooms
+from teacher.services import get_current_teacher_classrooms, get_current_teacher
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
@@ -39,8 +39,7 @@ class CreateClassroomsView(CreateView):
 
     def form_valid(self, form):
         instance = form.save(commit=False)
-        teacher = Teacher.objects.get(user=self.request.user)
-        instance.teacher = teacher
+        instance.teacher = get_current_teacher(self.request.user)
         instance.save()
         return redirect('teacher:classrooms')
 
