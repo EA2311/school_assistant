@@ -10,7 +10,8 @@ from accounts.models import Teacher, Student
 from student.models import StudentWork, ImagesSW
 from teacher.forms import ClassroomCreateForm, SubjectCreateForm, HomeworkCreateForm
 from teacher.models import Classroom, Subject, HomeTask, ImagesHT, Mark
-from teacher.services import get_current_teacher_classrooms, get_current_teacher
+from teacher.services import get_current_teacher_classrooms, get_current_teacher, \
+    get_current_classroom_students_with_annotation
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
@@ -60,18 +61,8 @@ class DetailClassroomView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        # Get queryset of students who are in the current classroom
-        students = Student.objects.select_related('user').filter(classroom=self.object).order_by('user__last_name')
-
-        # Count unchecked homeworks of every student
-        unchecked = Count('studentwork', filter=Q(studentwork__is_checked=False))
-
-        # Annotate students queryset with unchecked works
-        students = students.annotate(unchecked=unchecked)
-
         context['pk'] = self.kwargs['pk']
-        context['students'] = students
+        context['students'] = get_current_classroom_students_with_annotation(self.object)
         return context
 
 
