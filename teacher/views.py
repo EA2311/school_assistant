@@ -10,6 +10,7 @@ from accounts.models import Teacher, Student
 from student.models import StudentWork, ImagesSW
 from teacher.forms import ClassroomCreateForm, SubjectCreateForm, HomeworkCreateForm
 from teacher.models import Classroom, Subject, HomeTask, ImagesHT, Mark
+from teacher.services import get_current_teacher_classrooms
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
@@ -18,9 +19,8 @@ class ClassroomsView(ListView):
     context_object_name = 'classrooms'
 
     def get_queryset(self):
-        teacher = Teacher.objects.get(user=self.request.user)
-        classrooms = Classroom.objects.filter(teacher=teacher)
-        return classrooms
+        """Gets a queryset of classrooms related to current teacher."""
+        return get_current_teacher_classrooms(self.request.user)
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
@@ -223,7 +223,7 @@ class StudentWorksView(ListView):
         Return queryset of StudentWork objects which belong to current student and ordered by send date with related
         HomeTask, Subject, Student and User objects.
         """
-        return StudentWork.objects.select_related('home_task__subject', 'student__user').\
+        return StudentWork.objects.select_related('home_task__subject', 'student__user'). \
             filter(student=self.kwargs['student_id']).order_by('-send_date')
 
     def get_context_data(self, **kwargs):
