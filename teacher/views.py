@@ -86,10 +86,10 @@ class CreateSubjectView(CreateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        classroom = Classroom.objects.get(id=self.kwargs['pk'])
-        self.object.classroom = classroom
+        pk = self.kwargs['pk']
+        self.object.classroom = get_current_classroom(pk)
         self.object.save()
-        return redirect('teacher:subjects', pk=self.kwargs['pk'])
+        return redirect('teacher:subjects', pk=pk)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
