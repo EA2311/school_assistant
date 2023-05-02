@@ -1,4 +1,3 @@
-from django.db.models import Count, Q
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
@@ -11,7 +10,7 @@ from student.models import StudentWork, ImagesSW
 from teacher.forms import ClassroomCreateForm, SubjectCreateForm, HomeworkCreateForm
 from teacher.models import Classroom, Subject, HomeTask, ImagesHT, Mark
 from teacher.services import get_current_teacher_classrooms, get_current_teacher, \
-    get_current_classroom_students_with_annotation
+    get_current_classroom_students_with_annotation, get_current_classroom
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
@@ -77,7 +76,7 @@ class SubjectsView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['pk'] = self.kwargs['pk']
-        context['classroom'] = Classroom.objects.get(id=self.kwargs['pk'])
+        context['classroom'] = get_current_classroom(self.kwargs['pk'])
         return context
 
 

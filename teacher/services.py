@@ -20,7 +20,7 @@ def _get_current_classroom_students(classroom: Classroom) -> QuerySet[Student]:
 
 
 def _count_unchecked_student_homeworks() -> Count:
-    """Returns Count aggregator for unchecked student's homeworks."""
+    """Returns a Count aggregator for unchecked student's homeworks."""
     return Count('studentwork', filter=Q(studentwork__is_checked=False))
 
 
@@ -29,3 +29,8 @@ def get_current_classroom_students_with_annotation(classroom: Classroom) -> Quer
     Returns a queryset of students who are in the current classroom with annotated whether homework has been checked.
     """
     return _get_current_classroom_students(classroom).annotate(unchecked=_count_unchecked_student_homeworks())
+
+
+def get_current_classroom(classroom_id: int) -> Classroom:
+    """Returns a Classroom object of a current classroom."""
+    return Classroom.objects.get(id=classroom_id)
