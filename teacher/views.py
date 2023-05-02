@@ -10,7 +10,7 @@ from student.models import StudentWork, ImagesSW
 from teacher.forms import ClassroomCreateForm, SubjectCreateForm, HomeworkCreateForm
 from teacher.models import Classroom, Subject, HomeTask, ImagesHT, Mark
 from teacher.services import get_current_teacher_classrooms, get_current_teacher, \
-    get_current_classroom_students_with_annotation, get_current_classroom
+    get_current_classroom_students_with_annotation, get_current_classroom, get_current_subject, save_home_task_images
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
@@ -154,23 +154,18 @@ class CreateHomeTaskView(CreateView):
     form_class = HomeworkCreateForm
 
     def form_valid(self, form):
-        instance = form.save(commit=False)
-        subject = Subject.objects.get(id=self.kwargs['subj'])
-        instance.subject = subject
-        instance.save()
+        home_task = form.save(commit=False)
+        home_task.subject = get_current_subject(self.kwargs['subj'])
+        home_task.save()
 
-        images = self.request.FILES.getlist('images')
-        if images:
-            for image in images:
-                ImagesHT.objects.create(image=image, home_task=instance)
+        save_home_task_images(self.request.FILES.getlist('images'), home_task)
 
         return redirect('teacher:home_tasks', pk=self.kwargs['pk'], subj=self.kwargs['subj'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['pk'] = self.kwargs['pk']
-        subject = Subject.objects.get(id=self.kwargs['subj'])
-        context['subject'] = subject
+        context['subject'] = get_current_subject(self.kwargs['subj'])
         return context
 
 

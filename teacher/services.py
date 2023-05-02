@@ -1,7 +1,9 @@
+from typing import Optional
+
 from django.db.models import QuerySet, Count, Q
 
 from accounts.models import Teacher, User, Student
-from teacher.models import Classroom
+from teacher.models import Classroom, Subject, ImagesHT, HomeTask
 
 
 def get_current_teacher(user: User) -> Teacher:
@@ -32,5 +34,17 @@ def get_current_classroom_students_with_annotation(classroom: Classroom) -> Quer
 
 
 def get_current_classroom(classroom_id: int) -> Classroom:
-    """Returns a Classroom object of a current classroom."""
+    """Returns a Classroom object of a current classroom by id."""
     return Classroom.objects.get(id=classroom_id)
+
+
+def get_current_subject(subject_id: int) -> Subject:
+    """Returns a Subject object of a current subject by id."""
+    return Subject.objects.get(id=subject_id)
+
+
+def save_home_task_images(images: Optional[list], task: HomeTask) -> None:
+    """If home task images have been uploaded, creates and objects of ImagesHT for each of them."""
+    if images:
+        for image in images:
+            ImagesHT.objects.create(image=image, home_task=task)
