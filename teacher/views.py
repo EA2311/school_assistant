@@ -5,12 +5,14 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 
 from accounts.decorators import teacher_required
-from accounts.models import Teacher, Student
-from student.models import StudentWork, ImagesSW
+
 from teacher.forms import ClassroomCreateForm, SubjectCreateForm, HomeworkCreateForm
-from teacher.models import Classroom, Subject, HomeTask, ImagesHT, Mark
+from teacher.models import Classroom, Subject, HomeTask, ImagesHT
 from teacher.services import get_current_teacher_classrooms, get_current_teacher, \
-    get_current_classroom_students_with_annotation, get_current_classroom, get_current_subject, save_home_task_images
+    get_current_classroom_students_with_annotation, get_current_classroom, get_current_subject, save_home_task_images, \
+    get_student_work_with_related_objects, get_current_student_with_user, get_home_task_images_with_task, \
+    get_student_work_images_with_task, get_current_student_marks, create_mark_for_student_work, \
+    get_student_work_with_user
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
@@ -202,40 +204,21 @@ class StudentWorksView(ListView):
     context_object_name = 'home_works'
 
     def get_queryset(self):
-        """
-        Return queryset of StudentWork objects which belong to current student and ordered by send date with related
-        HomeTask, Subject, Student and User objects.
-        """
-        return StudentWork.objects.select_related('home_task__subject', 'student__user'). \
-            filter(student=self.kwargs['student_id']).order_by('-send_date')
+        return get_student_work_with_related_objects(self.kwargs['student_id'])
 
     def get_context_data(self, **kwargs):
+        pk = self.kwargs['pk']
+        student = get_current_student_with_user(self.kwargs['student_id'])
+
         context = super().get_context_data(**kwargs)
-
-        student = Student.objects.select_related('user').get(user=self.kwargs['student_id'])
-
-        images = ImagesHT.objects.select_related('home_task').filter(home_task__subject__classroom=self.kwargs['pk'])
-
-        images_sw = ImagesSW.objects.select_related('work__home_task').filter(work__student__user=student.user.id)
-
-        marks = Mark.objects.select_related('homework').filter(homework__student=student)
-
-        context['pk'] = self.kwargs['pk']
+        context['pk'] = pk
         context['st'] = student
-        context['images'] = images
-        context['images_sw'] = images_sw
-        context['marks'] = marks
-
+        context['images'] = get_home_task_images_with_task(pk)
+        context['images_sw'] = get_student_work_images_with_task(student.user.id)
+        context['marks'] = get_current_student_marks(student)
         return context
 
     def post(self, request, *args, **kwargs):
-        mark = request.POST.get('mark_')
-        comment = request.POST.get('comment_')
-        print(mark, comment)
-        teacher = Teacher.objects.get(user=request.user)
-        hw = StudentWork.objects.get(id=request.POST.get('submit'))
-
-        Mark.objects.create(mark=mark, comment=comment, teacher=teacher, homework=hw)
-        hw.is_checked = True
-        hw.save()
-        return redirect('teacher:homework', self.kwargs['pk'], hw.student.user.id)
+        student_work = get_student_work_with_user(request.POST.get('submit'))
+        create_mark_for_student_work(request.POST.get('mark_'), request.POST.get('comment_'), request.user, student_work)
+        return redirect('teacher:homework', self.kwargs['pk'], student_work.student.user.id)
