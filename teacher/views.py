@@ -6,14 +6,13 @@ from django.contrib.auth.decorators import login_required
 
 from accounts.decorators import teacher_required
 
-from teacher.forms import ClassroomCreateForm, SubjectCreateForm, HomeworkCreateForm
+from teacher.forms import ClassroomCreateForm, SubjectCreateForm, HomeTaskCreateForm
 from teacher.models import Classroom, Subject, HomeTask, ImagesHT
 from teacher.services import (
     get_current_teacher_classrooms,
     create_classroom,
     get_current_classroom_students_with_annotation,
     get_current_subject,
-    save_home_task_images,
     get_student_work_with_related_objects,
     get_current_student_with_user,
     get_home_task_images_with_task,
@@ -22,7 +21,8 @@ from teacher.services import (
     create_mark_for_student_work,
     get_student_work_with_user,
     get_classroom_subjects,
-    create_subject
+    create_subject,
+    create_home_task,
 )
 
 
@@ -160,16 +160,12 @@ class HomeTasksView(ListView):
 @method_decorator([login_required, teacher_required], name='dispatch')
 class CreateHomeTaskView(CreateView):
     template_name = 'teacher/create_home_tasks.html'
-    form_class = HomeworkCreateForm
+    form_class = HomeTaskCreateForm
 
     def form_valid(self, form):
-        home_task = form.save(commit=False)
-        home_task.subject = get_current_subject(self.kwargs['subj'])
-        home_task.save()
-
-        save_home_task_images(self.request.FILES.getlist('images'), home_task)
-
-        return redirect('teacher:home_tasks', pk=self.kwargs['pk'], subj=self.kwargs['subj'])
+        subject_id = self.kwargs['subj']
+        create_home_task(form, subject_id, self.request.FILES.getlist('images'))
+        return redirect('teacher:home_tasks', pk=self.kwargs['pk'], subj=subject_id)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

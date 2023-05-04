@@ -15,7 +15,7 @@ class SubjectCreateForm(forms.ModelForm):
         exclude = ('classroom', )
 
 
-class HomeworkCreateForm(forms.ModelForm):
+class HomeTaskCreateForm(forms.ModelForm):
     class Meta:
         model = HomeTask
         exclude = ('subject', )

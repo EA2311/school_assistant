@@ -4,7 +4,7 @@ from django.db.models import QuerySet, Count, Q
 
 from accounts.models import Teacher, User, Student
 from student.models import StudentWork, ImagesSW
-from teacher.forms import ClassroomCreateForm, SubjectCreateForm
+from teacher.forms import ClassroomCreateForm, SubjectCreateForm, HomeTaskCreateForm
 from teacher.models import Classroom, Subject, ImagesHT, HomeTask, Mark
 
 
@@ -64,7 +64,16 @@ def create_subject(form: SubjectCreateForm, classroom_id: int) -> None:
     subject.save()
 
 
-def save_home_task_images(images: Optional[list], task: HomeTask) -> None:
+def create_home_task(form: HomeTaskCreateForm, subject_id: int, images: Optional[list]) -> None:
+    """Creates a new HomeTask object for the current Subject and save images if them exist."""
+    home_task = form.save(commit=False)
+    home_task.subject = get_current_subject(subject_id)
+    home_task.save()
+
+    _save_home_task_images(images, home_task)
+
+
+def _save_home_task_images(images: Optional[list], task: HomeTask) -> None:
     """If home task images have been uploaded, creates and objects of ImagesHT for each of them."""
     if images:
         for image in images:
