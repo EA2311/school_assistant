@@ -22,7 +22,8 @@ from teacher.services import (
     get_student_work_images_with_task,
     get_current_student_marks,
     create_mark_for_student_work,
-    get_student_work_with_user
+    get_student_work_with_user,
+    get_classroom_subjects
 )
 
 
@@ -82,7 +83,7 @@ class SubjectsView(ListView):
     context_object_name = 'subjects'
 
     def get_queryset(self):
-        return Subject.objects.filter(classroom__id=self.kwargs['pk'])
+        return get_classroom_subjects(self.kwargs['pk'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

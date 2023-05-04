@@ -47,6 +47,11 @@ def get_current_classroom(classroom_id: int) -> Classroom:
     return Classroom.objects.get(id=classroom_id)
 
 
+def get_classroom_subjects(classroom_id: int) -> QuerySet[Subject]:
+    """Returns a queryset of Subject objects by classroom id."""
+    return Subject.objects.filter(classroom__id=classroom_id)
+
+
 def get_current_subject(subject_id: int) -> Subject:
     """Returns a Subject object of a current subject by id."""
     return Subject.objects.get(id=subject_id)
