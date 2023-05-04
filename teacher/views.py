@@ -23,6 +23,7 @@ from teacher.services import (
     get_classroom_subjects,
     create_subject,
     create_home_task,
+    get_ordered_home_tasks,
 )
 
 
@@ -138,22 +139,13 @@ class HomeTasksView(ListView):
     context_object_name = 'home_tasks'
 
     def get_queryset(self):
-        """
-        Return queryset of HomeTask objects which belong to current subject and ordered by publishing date.
-        """
-        return HomeTask.objects.filter(subject__id=self.kwargs['subj']).order_by('-pub_date')
+        return get_ordered_home_tasks(self.kwargs['subj'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        # Get current Subject object
-        subject = Subject.objects.get(id=self.kwargs['subj'])
-
         context['pk'] = self.kwargs['pk']
-        context['subject'] = subject
-
-        # Get queryset of ImagesHT objects which belong to current subject and related HomeTask objects
-        context['images'] = ImagesHT.objects.select_related('home_task').filter(home_task__subject=subject)
+        context['subject'] = get_current_subject(self.kwargs['subj'])
+        context['images'] = get_home_task_images_with_task(subject=context['subject'])
         return context
 
 
@@ -175,7 +167,7 @@ class CreateHomeTaskView(CreateView):
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
-class HomeTaskDeleteView(DeleteView):
+class HomeTaskDeleteView(DeleteView):  # TODO: is get method a right way to delete object in this scope?
     model = HomeTask
 
     def get(self, *a, **kwargs):

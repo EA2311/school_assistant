@@ -65,7 +65,7 @@ def create_subject(form: SubjectCreateForm, classroom_id: int) -> None:
 
 
 def create_home_task(form: HomeTaskCreateForm, subject_id: int, images: Optional[list]) -> None:
-    """Creates a new HomeTask object for the current Subject and save images if them exist."""
+    """Creates a new HomeTask object for the current Subject and save images if they exist."""
     home_task = form.save(commit=False)
     home_task.subject = get_current_subject(subject_id)
     home_task.save()
@@ -78,6 +78,11 @@ def _save_home_task_images(images: Optional[list], task: HomeTask) -> None:
     if images:
         for image in images:
             ImagesHT.objects.create(image=image, home_task=task)
+
+
+def get_ordered_home_tasks(subject_id: int) -> QuerySet[HomeTask]:
+    """Returns a queryset of HomeTask objects which belong to current Subject and ordered by publishing date."""
+    return HomeTask.objects.filter(subject=subject_id).order_by('-pub_date')
 
 
 def get_student_work_with_related_objects(student_id: int) -> QuerySet[StudentWork]:
@@ -94,9 +99,15 @@ def get_current_student_with_user(user_id: int) -> Student:
     return Student.objects.select_related('user').get(user=user_id)
 
 
-def get_home_task_images_with_task(classroom_id: int) -> QuerySet[ImagesHT]:
+def get_home_task_images_with_task(
+        classroom_id: Optional[int] = None,
+        subject: Optional[Subject] = None,
+) -> QuerySet[ImagesHT]:
     """Returns a ImagesHT queryset by classroom id with related HomeTask objects."""
-    return ImagesHT.objects.select_related('home_task').filter(home_task__subject__classroom=classroom_id)
+    if subject:
+        return ImagesHT.objects.select_related('home_task').filter(home_task__subject=subject)
+    else:
+        return ImagesHT.objects.select_related('home_task').filter(home_task__subject__classroom=classroom_id)
 
 
 def get_student_work_images_with_task(user_id: int) -> QuerySet[ImagesSW]:
