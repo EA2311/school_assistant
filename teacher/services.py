@@ -4,7 +4,7 @@ from django.db.models import QuerySet, Count, Q
 
 from accounts.models import Teacher, User, Student
 from student.models import StudentWork, ImagesSW
-from teacher.forms import ClassroomCreateForm
+from teacher.forms import ClassroomCreateForm, SubjectCreateForm
 from teacher.models import Classroom, Subject, ImagesHT, HomeTask, Mark
 
 
@@ -14,7 +14,7 @@ def get_current_teacher(user: User) -> Teacher:
 
 
 def create_classroom(form: ClassroomCreateForm, teacher: User) -> None:
-    """Creates Classroom object, fill teacher field and save it in the database."""
+    """Creates a Classroom object, fill teacher field and save it in the database."""
     classroom = form.save(commit=False)
     classroom.teacher = get_current_teacher(teacher)
     classroom.save()
@@ -55,6 +55,13 @@ def get_classroom_subjects(classroom_id: int) -> QuerySet[Subject]:
 def get_current_subject(subject_id: int) -> Subject:
     """Returns a Subject object of a current subject by id."""
     return Subject.objects.get(id=subject_id)
+
+
+def create_subject(form: SubjectCreateForm, classroom_id: int) -> None:
+    """Creates a new Subject object in the current Classroom."""
+    subject = form.save(commit=False)
+    subject.classroom = get_current_classroom(classroom_id)
+    subject.save()
 
 
 def save_home_task_images(images: Optional[list], task: HomeTask) -> None:

@@ -10,10 +10,8 @@ from teacher.forms import ClassroomCreateForm, SubjectCreateForm, HomeworkCreate
 from teacher.models import Classroom, Subject, HomeTask, ImagesHT
 from teacher.services import (
     get_current_teacher_classrooms,
-    get_current_teacher,
     create_classroom,
     get_current_classroom_students_with_annotation,
-    get_current_classroom,
     get_current_subject,
     save_home_task_images,
     get_student_work_with_related_objects,
@@ -23,7 +21,8 @@ from teacher.services import (
     get_current_student_marks,
     create_mark_for_student_work,
     get_student_work_with_user,
-    get_classroom_subjects
+    get_classroom_subjects,
+    create_subject
 )
 
 
@@ -97,10 +96,8 @@ class CreateSubjectView(CreateView):
     form_class = SubjectCreateForm
 
     def form_valid(self, form):
-        self.object = form.save(commit=False)
         pk = self.kwargs['pk']
-        self.object.classroom = get_current_classroom(pk)
-        self.object.save()
+        create_subject(form, pk)
         return redirect('teacher:subjects', pk=pk)
 
     def get_context_data(self, **kwargs):
