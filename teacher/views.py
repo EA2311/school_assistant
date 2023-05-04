@@ -8,11 +8,21 @@ from accounts.decorators import teacher_required
 
 from teacher.forms import ClassroomCreateForm, SubjectCreateForm, HomeworkCreateForm
 from teacher.models import Classroom, Subject, HomeTask, ImagesHT
-from teacher.services import get_current_teacher_classrooms, get_current_teacher, \
-    get_current_classroom_students_with_annotation, get_current_classroom, get_current_subject, save_home_task_images, \
-    get_student_work_with_related_objects, get_current_student_with_user, get_home_task_images_with_task, \
-    get_student_work_images_with_task, get_current_student_marks, create_mark_for_student_work, \
+from teacher.services import (
+    get_current_teacher_classrooms,
+    get_current_teacher,
+    get_current_classroom_students_with_annotation,
+    get_current_classroom,
+    get_current_subject,
+    save_home_task_images,
+    get_student_work_with_related_objects,
+    get_current_student_with_user,
+    get_home_task_images_with_task,
+    get_student_work_images_with_task,
+    get_current_student_marks,
+    create_mark_for_student_work,
     get_student_work_with_user
+)
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
