@@ -11,6 +11,7 @@ from teacher.models import Classroom, Subject, HomeTask, ImagesHT
 from teacher.services import (
     get_current_teacher_classrooms,
     get_current_teacher,
+    create_classroom,
     get_current_classroom_students_with_annotation,
     get_current_classroom,
     get_current_subject,
@@ -40,7 +41,7 @@ class ClassroomDeleteView(DeleteView):
     success_url = reverse_lazy('teacher:classrooms')
     model = Classroom
 
-    def get(self, *a, **kwargs):
+    def get(self, *a, **kwargs):  # TODO: is get method a right way to delete object in this scope?
         return self.delete(*a, **kwargs)
 
 
@@ -50,9 +51,7 @@ class CreateClassroomsView(CreateView):
     form_class = ClassroomCreateForm
 
     def form_valid(self, form):
-        instance = form.save(commit=False)
-        instance.teacher = get_current_teacher(self.request.user)
-        instance.save()
+        create_classroom(form, self.request.user)
         return redirect('teacher:classrooms')
 
 
@@ -113,7 +112,7 @@ class CreateSubjectView(CreateView):
 class SubjectDeleteView(DeleteView):
     model = Subject
 
-    def get(self, *a, **kw):
+    def get(self, *a, **kw):  # TODO: is get method a right way to delete object in this scope?
         return self.delete(kw['pk'])
 
     def get_success_url(self):

@@ -4,12 +4,20 @@ from django.db.models import QuerySet, Count, Q
 
 from accounts.models import Teacher, User, Student
 from student.models import StudentWork, ImagesSW
+from teacher.forms import ClassroomCreateForm
 from teacher.models import Classroom, Subject, ImagesHT, HomeTask, Mark
 
 
 def get_current_teacher(user: User) -> Teacher:
     """Returns current teacher object."""
     return Teacher.objects.get(user=user)
+
+
+def create_classroom(form: ClassroomCreateForm, teacher: User) -> None:
+    """Creates Classroom object, fill teacher field and save it in the database."""
+    classroom = form.save(commit=False)
+    classroom.teacher = get_current_teacher(teacher)
+    classroom.save()
 
 
 def get_current_teacher_classrooms(user: User) -> QuerySet[Classroom]:
