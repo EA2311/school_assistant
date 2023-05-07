@@ -160,11 +160,8 @@ class CreateHomeTaskView(CreateView):
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
-class HomeTaskDeleteView(DeleteView):  # TODO: is get method a right way to delete object in this scope?
+class HomeTaskDeleteView(DeleteView):
     model = HomeTask
-
-    def get(self, *a, **kwargs):
-        return self.delete(kwargs['pk'])
 
     def get_success_url(self):
         return reverse_lazy('teacher:home_tasks', kwargs={'pk': self.kwargs['cpk'], 'subj': self.kwargs['subj']})
