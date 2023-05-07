@@ -1,13 +1,12 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
 from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
+from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
 
 from accounts.decorators import teacher_required
-
 from teacher.forms import ClassroomCreateForm, SubjectCreateForm, HomeTaskCreateForm
-from teacher.models import Classroom, Subject, HomeTask, ImagesHT
+from teacher.models import Classroom, Subject, HomeTask
 from teacher.services import (
     get_current_teacher_classrooms,
     create_classroom,
@@ -42,10 +41,7 @@ class ClassroomDeleteView(DeleteView):
     success_url = reverse_lazy('teacher:classrooms')
     model = Classroom
 
-    def get(self, *a, **kwargs):  # TODO: is get method a right way to delete object in this scope?
-        return self.delete(*a, **kwargs)
-
-
+    
 @method_decorator([login_required, teacher_required], name='dispatch')
 class CreateClassroomsView(CreateView):
     template_name = 'teacher/create_classroom.html'

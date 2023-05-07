@@ -51,9 +51,11 @@
                     відновлення!
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Відмінити</button>
-                    <a href="{% url 'teacher:delete_classroom' c.id %}" type="button"
-                       class="btn btn-danger">Видалити</a>
+                    <form method="POST" action="{% url 'teacher:delete_classroom' c.id %}">
+                        {% csrf_token %}
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Відмінити</button>
+                        <input  type="submit" class="btn btn-danger" value="Видалити">
+                    </form>
                 </div>
             </div>
         </div>
