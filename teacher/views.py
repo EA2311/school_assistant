@@ -41,7 +41,7 @@ class ClassroomDeleteView(DeleteView):
     success_url = reverse_lazy('teacher:classrooms')
     model = Classroom
 
-    
+
 @method_decorator([login_required, teacher_required], name='dispatch')
 class CreateClassroomsView(CreateView):
     template_name = 'teacher/create_classroom.html'
@@ -106,9 +106,6 @@ class CreateSubjectView(CreateView):
 @method_decorator([login_required, teacher_required], name='dispatch')
 class SubjectDeleteView(DeleteView):
     model = Subject
-
-    def get(self, *a, **kw):  # TODO: is get method a right way to delete object in this scope?
-        return self.delete(kw['pk'])
 
     def get_success_url(self):
         return reverse_lazy('teacher:subjects', kwargs={'pk': self.kwargs['cpk']})
