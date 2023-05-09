@@ -26,6 +26,7 @@ from teacher.services.db_insert import (
     create_subject,
     create_home_task,
 )
+from teacher.services.set_context import set_context
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
@@ -69,10 +70,8 @@ class DetailClassroomView(DetailView):
     context_object_name = 'classroom'
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['pk'] = self.kwargs['pk']
-        context['students'] = get_current_classroom_students_with_annotation(self.object)
-        return context
+        return set_context(super().get_context_data(**kwargs), pk=self.kwargs['pk'],
+                           students=get_current_classroom_students_with_annotation(self.object))
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
@@ -84,9 +83,7 @@ class SubjectsView(ListView):
         return get_classroom_subjects(self.kwargs['pk'])
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['pk'] = self.kwargs['pk']
-        return context
+        return set_context(super().get_context_data(**kwargs), pk=self.kwargs['pk'])
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
@@ -100,9 +97,7 @@ class CreateSubjectView(CreateView):
         return redirect('teacher:subjects', pk=pk)
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['pk'] = self.kwargs['pk']
-        return context
+        return set_context(super().get_context_data(**kwargs), pk=self.kwargs['pk'])
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
@@ -120,9 +115,7 @@ class SubjectUpdateView(UpdateView):
     template_name = 'teacher/subject_update.html'
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['cpk'] = self.kwargs['cpk']
-        return context
+        return set_context(super().get_context_data(**kwargs), cpk=self.kwargs['cpk'])
 
     def get_success_url(self):
         return reverse_lazy('teacher:subjects', kwargs={'pk': self.kwargs['cpk']})
@@ -137,11 +130,9 @@ class HomeTasksView(ListView):
         return get_ordered_home_tasks(self.kwargs['subj'])
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['pk'] = self.kwargs['pk']
-        context['subject'] = get_current_subject(self.kwargs['subj'])
-        context['images'] = get_home_task_images_with_task(subject=context['subject'])
-        return context
+        subject = get_current_subject(self.kwargs['subj'])
+        return set_context(super().get_context_data(**kwargs), pk=self.kwargs['pk'], subject=subject,
+                           images=get_home_task_images_with_task(subject=subject))
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
@@ -155,10 +146,8 @@ class CreateHomeTaskView(CreateView):
         return redirect('teacher:home_tasks', pk=self.kwargs['pk'], subj=subject_id)
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['pk'] = self.kwargs['pk']
-        context['subject'] = get_current_subject(self.kwargs['subj'])
-        return context
+        return set_context(super().get_context_data(**kwargs), pk=self.kwargs['pk'],
+                           subject=get_current_subject(self.kwargs['subj']))
 
 
 @method_decorator([login_required, teacher_required], name='dispatch')
@@ -176,10 +165,7 @@ class HomeTaskUpdateView(UpdateView):
     template_name = 'teacher/home_task_update.html'
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['cpk'] = self.kwargs['cpk']
-        context['subj'] = self.kwargs['subj']
-        return context
+        return set_context(super().get_context_data(**kwargs), cpk=self.kwargs['cpk'], subj=self.kwargs['subj'])
 
     def get_success_url(self):
         return reverse_lazy('teacher:home_tasks', kwargs={'pk': self.kwargs['cpk'], 'subj': self.kwargs['subj']})
@@ -197,13 +183,9 @@ class StudentWorksView(ListView):
         pk = self.kwargs['pk']
         student = get_current_student_with_user(self.kwargs['student_id'])
 
-        context = super().get_context_data(**kwargs)
-        context['pk'] = pk
-        context['st'] = student
-        context['images'] = get_home_task_images_with_task(pk)
-        context['images_sw'] = get_student_work_images_with_task(student.user.id)
-        context['marks'] = get_current_student_marks(student)
-        return context
+        return set_context(
+            super().get_context_data(**kwargs), pk=pk, st=student, images=get_home_task_images_with_task(pk),
+            images_sw=get_student_work_images_with_task(student.user.id), marks=get_current_student_marks(student))
 
     def post(self, request, *args, **kwargs):
         student_work = get_student_work_with_user(request.POST.get('submit'))
