@@ -7,9 +7,8 @@ from django.views.generic import ListView, CreateView, DetailView, DeleteView, U
 from accounts.decorators import teacher_required
 from teacher.forms import ClassroomCreateForm, SubjectCreateForm, HomeTaskCreateForm
 from teacher.models import Classroom, Subject, HomeTask
-from teacher.services import (
+from teacher.services.db_select import (
     get_current_teacher_classrooms,
-    create_classroom,
     get_current_classroom_students_with_annotation,
     get_current_subject,
     get_student_work_with_related_objects,
@@ -17,12 +16,15 @@ from teacher.services import (
     get_home_task_images_with_task,
     get_student_work_images_with_task,
     get_current_student_marks,
-    create_mark_for_student_work,
     get_student_work_with_user,
     get_classroom_subjects,
+    get_ordered_home_tasks,
+)
+from teacher.services.db_insert import (
+    create_classroom,
+    create_mark_for_student_work,
     create_subject,
     create_home_task,
-    get_ordered_home_tasks,
 )
 
 
@@ -205,5 +207,6 @@ class StudentWorksView(ListView):
 
     def post(self, request, *args, **kwargs):
         student_work = get_student_work_with_user(request.POST.get('submit'))
-        create_mark_for_student_work(request.POST.get('mark_'), request.POST.get('comment_'), request.user, student_work)
+        create_mark_for_student_work(request.POST.get('mark_'), request.POST.get('comment_'), request.user,
+                                     student_work)
         return redirect('teacher:homework', self.kwargs['pk'], student_work.student.user.id)

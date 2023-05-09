@@ -4,20 +4,12 @@ from django.db.models import QuerySet, Count, Q
 
 from accounts.models import Teacher, User, Student
 from student.models import StudentWork, ImagesSW
-from teacher.forms import ClassroomCreateForm, SubjectCreateForm, HomeTaskCreateForm
 from teacher.models import Classroom, Subject, ImagesHT, HomeTask, Mark
 
 
 def get_current_teacher(user: User) -> Teacher:
     """Returns current teacher object."""
     return Teacher.objects.get(user=user)
-
-
-def create_classroom(form: ClassroomCreateForm, teacher: User) -> None:
-    """Creates a Classroom object, fill teacher field and save it in the database."""
-    classroom = form.save(commit=False)
-    classroom.teacher = get_current_teacher(teacher)
-    classroom.save()
 
 
 def get_current_teacher_classrooms(user: User) -> QuerySet[Classroom]:
@@ -55,29 +47,6 @@ def get_classroom_subjects(classroom_id: int) -> QuerySet[Subject]:
 def get_current_subject(subject_id: int) -> Subject:
     """Returns a Subject object of a current subject by id."""
     return Subject.objects.get(id=subject_id)
-
-
-def create_subject(form: SubjectCreateForm, classroom_id: int) -> None:
-    """Creates a new Subject object in the current Classroom."""
-    subject = form.save(commit=False)
-    subject.classroom = get_current_classroom(classroom_id)
-    subject.save()
-
-
-def create_home_task(form: HomeTaskCreateForm, subject_id: int, images: Optional[list]) -> None:
-    """Creates a new HomeTask object for the current Subject and save images if they exist."""
-    home_task = form.save(commit=False)
-    home_task.subject = get_current_subject(subject_id)
-    home_task.save()
-
-    _save_home_task_images(images, home_task)
-
-
-def _save_home_task_images(images: Optional[list], task: HomeTask) -> None:
-    """If home task images have been uploaded, creates and objects of ImagesHT for each of them."""
-    if images:
-        for image in images:
-            ImagesHT.objects.create(image=image, home_task=task)
 
 
 def get_ordered_home_tasks(subject_id: int) -> QuerySet[HomeTask]:
@@ -123,16 +92,3 @@ def get_current_student_marks(student: Student) -> QuerySet[Mark]:
 def get_student_work_with_user(student_work_id: int) -> StudentWork:
     """Returns a StudentWork queryset by student work id with related User object."""
     return StudentWork.objects.select_related('student__user').get(id=student_work_id)
-
-
-def create_mark_for_student_work(mark: str, comment: str, teacher_user: User, student_work: StudentWork) -> None:
-    """Create a Mark object for current student work and mark StudentWork object as checked."""
-    teacher = get_current_teacher(teacher_user)
-    Mark.objects.create(mark=mark, comment=comment, teacher=teacher, homework=student_work)
-    _mark_student_work_as_checked(student_work)
-
-
-def _mark_student_work_as_checked(student_work: StudentWork) -> None:
-    """Set is_checked field in StudentWork object as True and save it."""
-    student_work.is_checked = True
-    student_work.save()
