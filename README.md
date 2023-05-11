@@ -1,78 +1,92 @@
-# Introduction
+# School Assistant
 
-THIS IS ONLY A TEMPLATE FOR README.MD
+This Django project is designed to provide a platform for distance 
+learning. At the moment, it is adapted specifically for the education 
+of the younger grades of the school, where the distance learning process
+involves students completing homework and sending photos of the 
+completed work to the teacher for evaluation. It provides opportunities 
+to create classes, subjects, tasks and homework for participants of the 
+educational process.
 
-![Default Home View](__screenshots/home.png?raw=true "Title")
+---
 
-### Main features
+## Technology stack
 
-* 
+![image]({https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue})
+![image]({https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=green})
+![image]({https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white})
+![image]({https://img.shields.io/badge/PyCharm-000000.svg?&style=for-the-badge&logo=PyCharm&logoColor=white})
+![image]({https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white})
+![image]({https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white})
+![image]({https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white})
+![image]({})
 
-* 
+---
 
-* 
+## Usage
 
-* 
+### To try this project on your local machine follow the next steps:
 
-* 
+1. Clone this repository on your local machine:
 
-* 
+```bash
+git clone https://github.com/EA2311/school_assistant.git
+```
 
-* 
+2. Navigate to the project directory:
 
-# Usage
+```bash
+cd school_assistant
+```
 
-To use this template to start your own project:
+3. Create and activate the virtual environment:
 
-### Existing virtualenv
+```bash
+python -m venv venv
+source venv/bin/activate
+```
 
-If your project is already in an existing python3 virtualenv first install django by running
+4. Install dependencies:
 
-    $ pip install django
-    
-And then run the `django-admin.py` command to start the new project:
+```bash
+pip install -r requirements.txt
+```
 
-    ...
-      
-### No virtualenv
+5. Start database migrations:
 
-This assumes that `python3` is linked to valid installation of python 3 and that `pip` is installed and `pip3`is valid
-for installing python 3 packages.
+```bash
+python manage.py migrate
+```
 
-Installing inside virtualenv is recommended, however you can start your project without virtualenv too.
+6. Start the Django development server:
 
-If you don't have django installed for python 3 then run:
+```bash
+python manage.py runserver
+```
 
-    $ pip3 install django
-    
-And then:
+7. Open your web browser and visit [http://localhost:8000](http://localhost:8000) to see the app in action.
 
-    ...
-      
-      
-After that just install the local dependencies, run migrations, and start the server.
+---
 
+## Main features
 
+This project can have two types of users: **teacher** and **student**. Registration and authorization are available for each type of user.
 
-# Getting Started
+The **teacher** has the following opportunities:
 
-First clone the repository from GitHub and switch to the new directory:
+- **Creating classes**: Teachers can create a class by specifying a title and cover.
+- **Creation of disciplines**: Teachers can create educational disciplines individually for each class.
+- **Assignments**: Teachers can create assignments for subjects and attach study materials to them.
+- **View**: Teachers can view the list of students in their class and their completed work.
+- **Assessment**: Teachers can assess assignments submitted by students and set grades.
 
-    $ git clone git@github.com/USERNAME/{{ project_name }}.git
-    $ cd {{ project_name }}
-    
-Activate the virtualenv for your project.
-    
-Install project dependencies:
+The **student** has the following opportunities:
 
-    $ pip install -r requirements/local.txt
-    
-    
-Then simply apply the migrations:
+- **Joining a class**: Students can join a certain class at the beginning of their studies with a special unique key that the teacher has.
+- **View subjects**: Students can view the list of studied subjects.
+- **Assignments and Grades**: Students can view homework assignments and see grades for completed work.
+- **Completion of tasks**: Students can mark completed homework in the form of text and images.
 
-    $ python manage.py migrate
-    
+---
 
-You can now run the development server:
-
-    $ python manage.py runserver
+### Thank you for your interest in my project!
