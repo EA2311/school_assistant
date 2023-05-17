@@ -1,24 +1,7 @@
-import random
-import string
-
 from django.db import models
-
 from accounts.models import Teacher
 from managers import NoneManager
-
-
-def get_random_string():
-    """
-    Return a unique string of a random sequence of lower and uppercase characters and digits 40 characters long.
-    """
-    symbols = string.ascii_letters + string.digits
-    return ''.join(random.choice(symbols) for i in range(40))
-
-
-def classroom_file_name(instance, filename):
-    ext = filename.split('.')[-1]
-    filename = f"teacher_{instance.teacher.user.id}/{instance.class_name}.{ext}"
-    return filename
+from teacher.services.models_services import get_random_string, classroom_file_name, subject_file_name, ht_file_name
 
 
 class Classroom(models.Model):
@@ -30,12 +13,6 @@ class Classroom(models.Model):
 
     def __str__(self):
         return self.class_name
-
-
-def subject_file_name(instance, filename):
-    ext = filename.split('.')[-1]
-    filename = f"teacher_{instance.classroom.class_name}/{instance.subject_name}.{ext}"
-    return filename
 
 
 class Subject(models.Model):
@@ -55,12 +32,6 @@ class HomeTask(models.Model):
 
     def __str__(self):
         return f'{self.task} - {self.pub_date}'
-
-
-def ht_file_name(instance, filename):
-    ext = filename.split('.')[-1]
-    filename = f"teacher_{instance.home_task.subject.classroom.teacher.user.id}/{instance.home_task.subject.subject_name}/{instance.home_task.pub_date}.{ext}"
-    return filename
 
 
 class ImagesHT(models.Model):
