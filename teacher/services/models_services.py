@@ -9,7 +9,7 @@ def get_random_string():
 
 
 def generate_file_name(instance, filename):
-    """Returns a full filename string for uploaded image."""
+    """Returns a full filename string for uploaded image depending on an instance class."""
     ext = filename.split('.')[-1]
     from teacher.models import Classroom, Subject, ImagesHT
 
