@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='subject',
             name='image',
-            field=models.ImageField(upload_to=teacher.models.subject_file_name),
+            field=models.ImageField(upload_to=teacher.services.models_services.generate_file_name),
         ),
     ]

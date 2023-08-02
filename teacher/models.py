@@ -1,13 +1,13 @@
 from django.db import models
 from accounts.models import Teacher
 from managers import NoneManager
-from teacher.services.models_services import get_random_string, classroom_file_name, subject_file_name, ht_file_name
+from teacher.services.models_services import get_random_string, generate_file_name
 
 
 class Classroom(models.Model):
     class_name = models.CharField(blank=False, max_length=20)
     key = models.CharField(blank=False, max_length=50, unique=True, default=get_random_string)
-    image = models.ImageField(upload_to=classroom_file_name)
+    image = models.ImageField(upload_to=generate_file_name)
 
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
 
@@ -19,7 +19,7 @@ class Subject(models.Model):
     subject_name = models.CharField(max_length=50)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
 
-    image = models.ImageField(upload_to=subject_file_name, default='placeholder_image.webp')
+    image = models.ImageField(upload_to=generate_file_name, default='placeholder_image.webp')
 
     def __str__(self):
         return self.subject_name
@@ -37,7 +37,7 @@ class HomeTask(models.Model):
 class ImagesHT(models.Model):
     objects = NoneManager()
 
-    image = models.ImageField(upload_to=ht_file_name, null=False, blank=False)
+    image = models.ImageField(upload_to=generate_file_name, null=False, blank=False)
     home_task = models.ForeignKey(HomeTask, on_delete=models.CASCADE, null=False)
 
     def __str__(self):

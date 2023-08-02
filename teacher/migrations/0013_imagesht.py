@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             name='ImagesHT',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image', models.ImageField(upload_to=teacher.models.ht_file_name)),
+                ('image', models.ImageField(upload_to=teacher.services.models_services.generate_file_name)),
                 ('home_task', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='teacher.hometask')),
             ],
         ),

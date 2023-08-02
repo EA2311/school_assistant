@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='classroom',
             name='image',
-            field=models.ImageField(default='https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png', upload_to=teacher.models.classroom_file_name),
+            field=models.ImageField(default='https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png', upload_to=teacher.services.models_services.generate_file_name),
             preserve_default=False,
         ),
     ]
