@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from teacher.models import Classroom
-from teacher.services.models_services import get_random_string, classroom_file_name
+from teacher.services.models_services import get_random_string
 from teacher.services.set_context import set_context
 
 
