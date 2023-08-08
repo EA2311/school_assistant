@@ -7,8 +7,8 @@ from teacher.models import Classroom
 class ClassroomModelTest(TestCase):
     @classmethod
     def setUpTestData(cls) -> None:
-        user = User.objects.create(email='test@gmail.com',
-                                   phone_number='12412414214',
+        user = User.objects.create(email='test1@gmail.com',
+                                   phone_number='12d412414214',
                                    first_name='Fname',
                                    last_name='Lname',
                                    patronymic='Pname',
@@ -18,7 +18,7 @@ class ClassroomModelTest(TestCase):
         teacher = Teacher.objects.create(user=user)
 
         cls.classroom = Classroom.objects.create(class_name='1-A',
-                                                 key='asdsfssafsffadvfaefsca',
+                                                 key='aasdsfssafsffadvfaefsca',
                                                  image='img.png',
                                                  teacher=teacher
                                                  )
@@ -27,3 +27,5 @@ class ClassroomModelTest(TestCase):
         classroom = ClassroomModelTest.classroom
         expected_object_name = classroom.class_name
         self.assertEqual(expected_object_name, str(classroom))
+
+
