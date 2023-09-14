@@ -14,6 +14,8 @@ urlpatterns += [
     path('teacher/', include('teacher.urls')),
     path('student/', include('student.urls')),
     path('', index, name='index'),
+
+    path('api/', include('api.urls')),
 ]
 
 
