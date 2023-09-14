@@ -7,9 +7,7 @@ from school_assistant import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-]
 
-urlpatterns += [
     path('accounts/', include('accounts.urls')),
     path('teacher/', include('teacher.urls')),
     path('student/', include('student.urls')),
