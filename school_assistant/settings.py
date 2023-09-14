@@ -34,9 +34,11 @@ INSTALLED_APPS = [
     'accounts',
     'teacher',
     'student',
+    'api',
 
     'crispy_forms',
     'debug_toolbar',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

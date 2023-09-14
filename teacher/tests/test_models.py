@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from accounts.models import Teacher, User
-from teacher.models import Classroom, Subject, HomeTask, ImagesHT
+from teacher.models import Classroom, Subject, HomeTask, ImagesHT, Mark
 
 
 class ImageHT:
@@ -29,6 +29,7 @@ class TeacherTestCase(TestCase):
         cls.subject = Subject.objects.create(subject_name='Math', classroom=cls.classroom, image='1.png')
         cls.home_task = HomeTask.objects.create(task='task', subject=cls.subject)
         cls.imageHT = ImagesHT.objects.create(image='filename.png', home_task=cls.home_task)
+        #cls.mark = Mark.objects.create(teacher=cls.teacher, homework='home work', mark='good')
 
 
 class ClassroomModelTest(TeacherTestCase):
@@ -58,4 +59,10 @@ class ImagesHTModelTest(TeacherTestCase):
         expected_object_name = f'{imageHT.image} - {imageHT.home_task}'
         self.assertEqual(expected_object_name, str(imageHT))
 
+
+class MarkModelTest(TeacherTestCase):
+    def test_mark_object_name_is_teacher_first_name_field_with_mark_field(self):
+        mark = self.mark
+        expected_object_name = f'{mark.teacher.user.first_name} - {mark.mark}'
+        self.assertEqual(expected_object_name, str(mark))
 
