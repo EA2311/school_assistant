@@ -50,19 +50,22 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-5. Start database migrations:
+5. Create .env file with your own SECRET_KEY variable.
+
+
+6. Start database migrations:
 
 ```bash
 python manage.py migrate
 ```
 
-6. Start the Django development server:
+7. Start the Django development server:
 
 ```bash
 python manage.py runserver
 ```
 
-7. Open your web browser and visit [http://localhost:8000](http://localhost:8000) to see the app in action.
+8. Open your web browser and visit [http://localhost:8000](http://localhost:8000) to see the app in action.
 
 ---
 
